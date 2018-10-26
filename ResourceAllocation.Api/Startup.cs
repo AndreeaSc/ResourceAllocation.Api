@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ResourceAllocation.DataLayer.FashionModels;
+using ResourceAllocation.Services.FashionModels;
 
 namespace ResourceAllocation.Api
 {
@@ -26,6 +28,8 @@ namespace ResourceAllocation.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSingleton<IFashionModelsService, FashionModelsService>();
+            services.AddSingleton<IFashionModelsRepository, FashionModelsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
