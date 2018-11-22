@@ -1,49 +1,44 @@
-﻿using System;
+﻿using ResourceAllocation.DataLayer.FashionModels;
+using ResourceAllocation.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using ResourceAllocation.DataLayer.FashionModels;
-using ResourceAllocation.Domain;
+using System.Threading.Tasks;
 
 namespace ResourceAllocation.Services.FashionModels
 {
     public class FashionModelsService : IFashionModelsService
     {
         private readonly IFashionModelsRepository _fashionModelsRepository;
-        private static List<FashionModelEntity> _fashionModelEntities = new List<FashionModelEntity>();
 
         public FashionModelsService(IFashionModelsRepository fashionModelsRepository)
         {
             _fashionModelsRepository = fashionModelsRepository;
         }
 
-        public IEnumerable<FashionModelEntity> GetAll()
+        public async Task<IEnumerable<FashionModelEntity>> GetAll()
         {
-            return _fashionModelEntities;
+            return await _fashionModelsRepository.GetAll();
         }
 
-        public FashionModelEntity GetById(Guid id)
+        public async Task<FashionModelEntity> GetById(Guid id)
         {
-            return _fashionModelEntities.FirstOrDefault(x => x.Id == id);
+            return await _fashionModelsRepository.GetById(id);
         }
 
-        public void Add(FashionModelEntity entity)
+        public async Task Add(FashionModelEntity entity)
         {
-            _fashionModelEntities.Add(entity);
+            await _fashionModelsRepository.Add(entity);
         }
 
-        public void Update(FashionModelEntity entity)
+        public async Task Update(FashionModelEntity entity)
         {
-            var item = _fashionModelEntities.FirstOrDefault(x => x.Id == entity.Id);
-            if (item != null)
-            {
-                item.Name = entity.Name;
-            }
+            await _fashionModelsRepository.Update(entity);
         }
 
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            var items = _fashionModelEntities.Where(x => x.Id != id).ToList();
-            _fashionModelEntities = items;
+
         }
     }
 }
