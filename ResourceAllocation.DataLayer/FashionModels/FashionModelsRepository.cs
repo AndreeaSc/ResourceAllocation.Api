@@ -14,7 +14,7 @@ namespace ResourceAllocation.DataLayer.FashionModels
         {
             _context = context;
         }
-
+         
         public async Task<IEnumerable<FashionModelEntity>> GetAll()
         {
             var result = _context.FashionModels.ToList();
