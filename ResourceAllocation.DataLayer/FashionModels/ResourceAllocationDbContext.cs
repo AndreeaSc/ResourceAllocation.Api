@@ -12,5 +12,6 @@ namespace ResourceAllocation.DataLayer.FashionModels
 
         public DbSet<FashionModelEntity> FashionModels { get; set; }
         public DbSet<DesignerEntity> Designers { get; set; }
+        public DbSet<ShowEntity> Shows { get; set; }
     }
 }

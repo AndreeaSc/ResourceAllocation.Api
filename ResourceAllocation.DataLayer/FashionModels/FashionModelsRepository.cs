@@ -46,7 +46,6 @@ namespace ResourceAllocation.DataLayer.FashionModels
 
         public async Task Delete(Guid id)
         {
-
         }
     }
 }

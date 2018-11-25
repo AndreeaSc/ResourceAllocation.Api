@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using ResourceAllocation.DataLayer.Designers;
 using ResourceAllocation.DataLayer.FashionModels;
+using ResourceAllocation.DataLayer.Show;
+using ResourceAllocation.DataLayer.Shows;
+using ResourceAllocation.Services.Designers;
 using ResourceAllocation.Services.FashionModels;
+using ResourceAllocation.Services.Show;
 
 namespace ResourceAllocation.Api
 {
@@ -29,11 +27,18 @@ namespace ResourceAllocation.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             services.AddTransient<IFashionModelsService, FashionModelsService>();
             services.AddTransient<IFashionModelsRepository, FashionModelsRepository>();
 
+            services.AddTransient<IDesignersService, DesignersService>();
+            services.AddTransient<IDesignersRepository, DesignersRepository>();
+
+            services.AddTransient<IShowsService, ShowsService>();
+            services.AddTransient<IShowsRepository, ShowsRepository>();
+
             var connection = @"Server=(localdb)\mssqllocaldb;Database=ResourceAllocation;Trusted_Connection=True;ConnectRetryCount=0";
-            services.AddDbContext <ResourceAllocationDbContext>
+            services.AddDbContext<ResourceAllocationDbContext>
                 (options => options.UseSqlServer(connection));
         }
 
@@ -50,10 +55,11 @@ namespace ResourceAllocation.Api
             }
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-                    {
+            {
                 var context = serviceScope.ServiceProvider.GetRequiredService<ResourceAllocationDbContext>();
+                context.Database.EnsureCreated();
                 context.Database.Migrate();
-                           }
+            }
 
             app.UseHttpsRedirection();
             app.UseMvc();
