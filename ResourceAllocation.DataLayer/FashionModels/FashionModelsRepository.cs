@@ -17,7 +17,9 @@ namespace ResourceAllocation.DataLayer.FashionModels
 
         public async Task<IEnumerable<FashionModelEntity>> GetAll()
         {
-            var result = _context.FashionModels.ToList();
+            var result = _context.FashionModels
+                .OrderByDescending(x => x.DateCreated)
+                .ToList();
 
             return result;
         }
