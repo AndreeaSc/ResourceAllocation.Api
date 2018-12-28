@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ResourceAllocation.Domain
+﻿namespace ResourceAllocation.Domain
 {
     public class FashionModelEntity : BaseEntity
     {
@@ -10,7 +8,11 @@ namespace ResourceAllocation.Domain
         public int BreastSize { get; set; }
         public int WaistSize { get; set; }
         public int HipsSize { get; set; }
-        public EyesColorType EyesColor { get; set; }
-        public HairColorType HairColor { get; set; }
+        public string EyesColor { get; set; }
+        public string HairColor { get; set; }
+        public string Facebook { get; set; }
+        public string Instagram { get; set; }
+        public string Description { get; set; }
+        public string Photo { get; set; }
     }
 }
