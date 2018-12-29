@@ -40,8 +40,18 @@ namespace ResourceAllocation.DataLayer.FashionModels
         public async Task Update(FashionModelEntity entity)
         {
             var dbEntity = _context.FashionModels.First(x => x.Id == entity.Id);
+            dbEntity.Name = entity.Name;
+            dbEntity.Height = entity.Height;
+            dbEntity.Weight = entity.Weight;
+            dbEntity.WaistSize = entity.WaistSize;
+            dbEntity.HipsSize = entity.HipsSize;
             dbEntity.BreastSize = entity.BreastSize;
             dbEntity.EyesColor = entity.EyesColor;
+            dbEntity.HairColor = entity.HairColor;
+            dbEntity.Facebook = entity.Facebook;
+            dbEntity.Instagram = entity.Instagram;
+            dbEntity.Photo = entity.Photo;
+            dbEntity.Description = entity.Description;
             _context.FashionModels.Update(dbEntity);
             _context.SaveChanges();
         }

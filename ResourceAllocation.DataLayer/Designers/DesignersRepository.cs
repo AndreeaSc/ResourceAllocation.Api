@@ -40,6 +40,8 @@ namespace ResourceAllocation.DataLayer.Designers
         {
             var dbEntity = _context.Designers.First(x => x.Id == entity.Id);
             dbEntity.Name = entity.Name;
+            dbEntity.Mail = entity.Mail;
+            dbEntity.Surname = entity.Surname;
             _context.Designers.Update(dbEntity);
             _context.SaveChanges();
         }
