@@ -46,6 +46,7 @@ namespace ResourceAllocation.DataLayer.Show
         {
             var dbEntity = _context.Shows.First(x => x.Id == entity.Id);
             dbEntity.Designer = entity.Designer;
+            dbEntity.Date = entity.Date;
             _context.Shows.Update(dbEntity);
             _context.SaveChanges();
         }
