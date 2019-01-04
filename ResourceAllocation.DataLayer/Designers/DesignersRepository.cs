@@ -48,6 +48,9 @@ namespace ResourceAllocation.DataLayer.Designers
 
         public async Task Delete(Guid id)
         {
+            var dbEntity = _context.Designers.First(x => x.Id == id);
+            _context.Designers.Remove(dbEntity);
+            _context.SaveChanges();
         }
     }
 }

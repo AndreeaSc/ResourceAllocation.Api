@@ -48,6 +48,7 @@ namespace ResourceAllocation.Api.Controllers
         [Route("{id:Guid}")]
         public void Delete(Guid id)
         {
+            _showsService.Delete(id);
         }
     }
 }

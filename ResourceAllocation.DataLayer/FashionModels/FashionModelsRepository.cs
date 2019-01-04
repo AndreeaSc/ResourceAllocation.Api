@@ -58,6 +58,9 @@ namespace ResourceAllocation.DataLayer.FashionModels
 
         public async Task Delete(Guid id)
         {
+            var dbEntity = _context.FashionModels.First(x => x.Id == id);
+            _context.FashionModels.Remove(dbEntity);
+            _context.SaveChanges();
         }
     }
 }
