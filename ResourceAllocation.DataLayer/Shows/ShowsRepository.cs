@@ -26,7 +26,9 @@ namespace ResourceAllocation.DataLayer.Show
 
         public async Task Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var dbEntity = _context.Shows.First(x => x.Id == id);
+            _context.Shows.Remove(dbEntity);
+            _context.SaveChanges();
         }
 
         public async Task<IEnumerable<ShowEntity>> GetAll()

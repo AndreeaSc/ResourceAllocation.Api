@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using ResourceAllocation.Domain;
 using ResourceAllocation.Services.FashionModels;

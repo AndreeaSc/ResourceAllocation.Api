@@ -22,6 +22,7 @@ namespace ResourceAllocation.Services.Show
 
         public async Task Delete(Guid id)
         {
+            await _showsRepository.Delete(id);
         }
 
         public async Task<IEnumerable<ShowEntity>> GetAll()

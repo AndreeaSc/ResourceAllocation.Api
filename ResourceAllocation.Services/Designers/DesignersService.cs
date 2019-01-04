@@ -22,6 +22,7 @@ namespace ResourceAllocation.Services.Designers
 
         public async Task Delete(Guid id)
         {
+            await _designersRepository.Delete(id);
         }
 
         public async Task<IEnumerable<DesignerEntity>> GetAll()

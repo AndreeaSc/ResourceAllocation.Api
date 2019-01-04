@@ -38,7 +38,7 @@ namespace ResourceAllocation.Services.FashionModels
 
         public async Task Delete(Guid id)
         {
-
+            await _fashionModelsRepository.Delete(id);
         }
     }
 }
