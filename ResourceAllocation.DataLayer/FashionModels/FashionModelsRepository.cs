@@ -52,6 +52,7 @@ namespace ResourceAllocation.DataLayer.FashionModels
             dbEntity.Instagram = entity.Instagram;
             dbEntity.Photo = entity.Photo;
             dbEntity.Description = entity.Description;
+            dbEntity.Gender = entity.Gender;
             _context.FashionModels.Update(dbEntity);
             _context.SaveChanges();
         }
