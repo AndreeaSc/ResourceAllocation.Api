@@ -17,9 +17,11 @@ namespace ResourceAllocation.DataLayer.FashionModels
 
         public async Task<IEnumerable<FashionModelEntity>> GetAll()
         {
-            var result = _context.FashionModels
-                .OrderByDescending(x => x.DateCreated)
-                .ToList();
+            //var result = _context.FashionModels
+            //    .OrderByDescending(x => x.DateCreated)
+            //    .ToList();
+
+            var result = _context.FashionModels.ToList();
 
             return result;
         }
@@ -52,7 +54,6 @@ namespace ResourceAllocation.DataLayer.FashionModels
             dbEntity.Instagram = entity.Instagram;
             dbEntity.Photo = entity.Photo;
             dbEntity.Description = entity.Description;
-            dbEntity.Gender = entity.Gender;
             _context.FashionModels.Update(dbEntity);
             _context.SaveChanges();
         }
