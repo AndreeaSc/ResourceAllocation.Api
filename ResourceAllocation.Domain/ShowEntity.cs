@@ -8,7 +8,7 @@ namespace ResourceAllocation.Domain
     {
         public string Designer { get; set; }
         public DateTime Date { get; set; }
-       // public string FashionModelsName { get; set; }
-      //  public string Location { get; set; }
+        public string FashionModelsName { get; set; }
+        public string Location { get; set; }
     }
 }

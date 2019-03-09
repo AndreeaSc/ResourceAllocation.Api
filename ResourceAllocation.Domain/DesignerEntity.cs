@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace ResourceAllocation.Domain
 {
@@ -10,5 +8,6 @@ namespace ResourceAllocation.Domain
         public string Surname { get; set; }
         public string Mail { get; set; }
         public string Password { get; set; }
+        public List<FashionModelEntity> SelectedModels { get; set; }
     }
 }

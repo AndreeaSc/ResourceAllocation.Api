@@ -42,6 +42,8 @@ namespace ResourceAllocation.DataLayer.Designers
             dbEntity.Name = entity.Name;
             dbEntity.Mail = entity.Mail;
             dbEntity.Surname = entity.Surname;
+            dbEntity.Password = entity.Password;
+           // dbEntity.SelectedModels = entity.SelectedModels;
             _context.Designers.Update(dbEntity);
             _context.SaveChanges();
         }
