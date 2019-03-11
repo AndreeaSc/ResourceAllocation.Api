@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ResourceAllocation.DataLayer.Designers;
 using ResourceAllocation.Domain;
 
@@ -15,29 +14,37 @@ namespace ResourceAllocation.Services.Designers
             _designersRepository = designersRepository;
         }
 
-        public async Task Add(DesignerEntity entity)
+        public void Add(DesignerEntity entity)
         {
-            await _designersRepository.Add(entity);
+             _designersRepository.Add(entity);
         }
 
-        public async Task Delete(Guid id)
+        public void Delete(Guid id)
         {
-            await _designersRepository.Delete(id);
+            _designersRepository.Delete(id);
         }
 
-        public async Task<IEnumerable<DesignerEntity>> GetAll()
+        public IEnumerable<DesignerEntity> GetAll()
         {
-            return await _designersRepository.GetAll();
+            var result = _designersRepository.GetAll();
+            return result;
         }
 
-        public async Task<DesignerEntity> GetById(Guid id)
+        public  DesignerEntity GetById(Guid id)
         {
-            return await _designersRepository.GetById(id);
+            var result = _designersRepository.GetById(id);
+            return result;
         }
 
-        public async Task Update(DesignerEntity entity)
+        public IEnumerable<FashionModelEntity> GetResultedModelsById(Guid id)
         {
-            await _designersRepository.Update(entity);
+            var result = _designersRepository.GetResultedModelsById(id);
+            return result;
+        }
+        
+        public void Update(DesignerEntity entity)
+        {
+            _designersRepository.Update(entity);
         }
     }
 }

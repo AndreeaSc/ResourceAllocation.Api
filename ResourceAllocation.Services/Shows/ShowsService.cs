@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ResourceAllocation.DataLayer.Shows;
 using ResourceAllocation.Domain;
 
-namespace ResourceAllocation.Services.Show
+namespace ResourceAllocation.Services.Shows
 {
     public class ShowsService : IShowsService
     {
@@ -15,29 +14,31 @@ namespace ResourceAllocation.Services.Show
             _showsRepository = showsRepository;
         }
 
-        public async Task Add(ShowEntity entity)
+        public void Add(ShowEntity entity)
         {
-            await _showsRepository.Add(entity);
+            _showsRepository.Add(entity);
         }
 
-        public async Task Delete(Guid id)
+        public void Delete(Guid id)
         {
-            await _showsRepository.Delete(id);
+            _showsRepository.Delete(id);
         }
 
-        public async Task<IEnumerable<ShowEntity>> GetAll()
+        public IEnumerable<ShowEntity> GetAll()
         {
-            return await _showsRepository.GetAll();
+            var result = _showsRepository.GetAll();
+            return result;
         }
 
-        public async Task<ShowEntity> GetById(Guid id)
+        public ShowEntity GetById(Guid id)
         {
-            return await _showsRepository.GetById(id);
+            var result = _showsRepository.GetById(id);
+            return result;
         }
 
-        public async Task Update(ShowEntity entity)
+        public void Update(ShowEntity entity)
         {
-            await _showsRepository.Update(entity);
+            _showsRepository.Update(entity);
         }
     }
 }

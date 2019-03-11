@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using ResourceAllocation.DataLayer.FashionModels;
-using ResourceAllocation.DataLayer.Shows;
 using ResourceAllocation.Domain;
 
-namespace ResourceAllocation.DataLayer.Show
+namespace ResourceAllocation.DataLayer.Shows
 {
     public class ShowsRepository : IShowsRepository
     {
@@ -17,38 +14,40 @@ namespace ResourceAllocation.DataLayer.Show
             _context = context;
         }
 
-        public async Task Add(ShowEntity entity)
+        public void Add(ShowEntity entity)
         {
             entity.DateCreated = DateTime.Now.ToUniversalTime();
             _context.Shows.Add(entity);
             _context.SaveChanges();
         }
 
-        public async Task Delete(Guid id)
+        public void Delete(Guid id)
         {
             var dbEntity = _context.Shows.First(x => x.Id == id);
             _context.Shows.Remove(dbEntity);
             _context.SaveChanges();
         }
 
-        public async Task<IEnumerable<ShowEntity>> GetAll()
+        public IEnumerable<ShowEntity> GetAll()
         {
             var result = _context.Shows.ToList();
 
             return result;
         }
 
-        public async Task<ShowEntity> GetById(Guid id)
+        public ShowEntity GetById(Guid id)
         {
             var result = _context.Shows.FirstOrDefault(x => x.Id == id);
             return result;
         }
 
-        public async Task Update(ShowEntity entity)
+        public void Update(ShowEntity entity)
         {
             var dbEntity = _context.Shows.First(x => x.Id == entity.Id);
             dbEntity.Designer = entity.Designer;
             dbEntity.Date = entity.Date;
+            dbEntity.FashionModelsName = entity.FashionModelsName;
+            dbEntity.Location = entity.Location;
             _context.Shows.Update(dbEntity);
             _context.SaveChanges();
         }

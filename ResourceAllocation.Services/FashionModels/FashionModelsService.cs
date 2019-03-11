@@ -2,7 +2,6 @@
 using ResourceAllocation.Domain;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ResourceAllocation.Services.FashionModels
@@ -16,29 +15,31 @@ namespace ResourceAllocation.Services.FashionModels
             _fashionModelsRepository = fashionModelsRepository;
         }
 
-        public async Task<IEnumerable<FashionModelEntity>> GetAll()
+        public IEnumerable<FashionModelEntity> GetAll()
         {
-            return await _fashionModelsRepository.GetAll();
+            var result = _fashionModelsRepository.GetAll();
+            return result;
         }
 
-        public async Task<FashionModelEntity> GetById(Guid id)
+        public FashionModelEntity GetById(Guid id)
         {
-            return await _fashionModelsRepository.GetById(id);
+            var result = _fashionModelsRepository.GetById(id);
+            return result;
         }
 
-        public async Task Add(FashionModelEntity entity)
+        public void Add(FashionModelEntity entity)
         {
-            await _fashionModelsRepository.Add(entity);
+            _fashionModelsRepository.Add(entity);
         }
 
-        public async Task Update(FashionModelEntity entity)
+        public void Update(FashionModelEntity entity)
         {
-            await _fashionModelsRepository.Update(entity);
+            _fashionModelsRepository.Update(entity);
         }
 
-        public async Task Delete(Guid id)
+        public void Delete(Guid id)
         {
-            await _fashionModelsRepository.Delete(id);
+            _fashionModelsRepository.Delete(id);
         }
     }
 }

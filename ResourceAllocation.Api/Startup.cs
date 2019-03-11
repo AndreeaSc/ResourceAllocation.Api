@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ResourceAllocation.DataLayer;
 using ResourceAllocation.DataLayer.Designers;
 using ResourceAllocation.DataLayer.FashionModels;
-using ResourceAllocation.DataLayer.Show;
 using ResourceAllocation.DataLayer.Shows;
 using ResourceAllocation.Services.Designers;
 using ResourceAllocation.Services.FashionModels;
-using ResourceAllocation.Services.Show;
+using ResourceAllocation.Services.Shows;
 
 namespace ResourceAllocation.Api
 {

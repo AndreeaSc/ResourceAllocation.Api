@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ResourceAllocation.Domain;
 using ResourceAllocation.Services.Designers;
@@ -19,7 +18,7 @@ namespace ResourceAllocation.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<DesignerEntity>> Get()
+        public IActionResult Get()
         {
             var result = _designersService.GetAll();
             return Ok(result);
@@ -27,29 +26,39 @@ namespace ResourceAllocation.Api.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
-        public ActionResult<DesignerEntity> Get(Guid id)
+        public IActionResult Get(Guid id)
+        {
+            var result = _designersService.GetById(id);
+            return Ok(result);
+        }
+
+        [HttpGet("{id:Guid}/algorithm")]
+        public IActionResult GetResultedModelsById(Guid id)
         {
             var result = _designersService.GetById(id);
             return Ok(result);
         }
 
         [HttpPut]
-        public void Put(DesignerEntity entity)
+        public IActionResult Put(DesignerEntity entity)
         {
             _designersService.Add(entity);
+            return Ok();
         }
 
         [HttpPatch]
-        public void Patch(DesignerEntity entity)
+        public IActionResult Patch(DesignerEntity entity)
         {
-            _designersService.Update(entity);
+           _designersService.Update(entity);
+            return Ok();
         }
 
         [HttpDelete]
         [Route("{id:Guid}")]
-        public void Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
             _designersService.Delete(id);
+            return Ok();
         }
     }
 }

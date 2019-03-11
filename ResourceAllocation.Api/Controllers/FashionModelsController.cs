@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using ResourceAllocation.Domain;
 using ResourceAllocation.Services.FashionModels;
@@ -20,7 +17,7 @@ namespace ResourceAllocation.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<FashionModelEntity>> Get()
+        public IActionResult Get()
         {
             var result = _fashionModelsService.GetAll();
             return Ok(result);
@@ -28,29 +25,32 @@ namespace ResourceAllocation.Api.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
-        public ActionResult<FashionModelEntity> Get(Guid id)
+        public IActionResult Get(Guid id)
         {
             var result = _fashionModelsService.GetById(id);
             return Ok(result);
         }
 
         [HttpPut]
-        public void Put(FashionModelEntity entity)
+        public IActionResult Put(FashionModelEntity entity)
         {
             _fashionModelsService.Add(entity);
+            return Ok();
         }
 
         [HttpPatch]
-        public void Patch(FashionModelEntity entity)
+        public IActionResult Patch(FashionModelEntity entity)
         {
             _fashionModelsService.Update(entity);
+            return Ok();
         }
 
         [HttpDelete]
         [Route("{id:Guid}")]
-        public void Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
             _fashionModelsService.Delete(id);
+            return Ok();
         }
     }
 }
