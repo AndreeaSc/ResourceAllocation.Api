@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ResourceAllocation.Domain;
-using ResourceAllocation.Services.Show;
+using ResourceAllocation.Services.Shows;
 
 namespace ResourceAllocation.Api.Controllers
 {
@@ -18,7 +18,7 @@ namespace ResourceAllocation.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ShowEntity>> Get()
+        public IActionResult Get()
         {
             var result = _showsService.GetAll();
             return Ok(result);
@@ -26,29 +26,32 @@ namespace ResourceAllocation.Api.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
-        public ActionResult<ShowEntity> Get(Guid id)
+        public IActionResult Get(Guid id)
         {
             var result = _showsService.GetById(id);
             return Ok(result);
         }
 
         [HttpPut]
-        public void Put(ShowEntity entity)
+        public IActionResult Put(ShowEntity entity)
         {
             _showsService.Add(entity);
+            return Ok();
         }
 
         [HttpPatch]
-        public void Patch(ShowEntity entity)
+        public IActionResult Patch(ShowEntity entity)
         {
             _showsService.Update(entity);
+            return Ok();
         }
 
         [HttpDelete]
         [Route("{id:Guid}")]
-        public void Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
             _showsService.Delete(id);
+            return Ok();
         }
     }
 }

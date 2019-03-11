@@ -15,5 +15,6 @@
         public string Description { get; set; }
         public string Photo { get; set; }
         public string Gender { get; set; }
+        public int Prioriy { get; set; }
     }
 }
