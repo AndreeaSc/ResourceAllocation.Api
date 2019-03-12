@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +28,10 @@ namespace ResourceAllocation.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("LocalCorsConfig", policy => policy.WithOrigins("http://localhost:4200"));
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -66,9 +71,7 @@ namespace ResourceAllocation.Api
             app.UseHttpsRedirection();
             app.UseMvc();
 
-            app.UseCors(builder => builder.AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowAnyOrigin());
+            app.UseCors("LocalCorsConfig");
         }
     }
 }

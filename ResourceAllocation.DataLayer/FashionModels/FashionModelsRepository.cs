@@ -58,7 +58,11 @@ namespace ResourceAllocation.DataLayer.FashionModels
 
         public void Delete(Guid id)
         {
-            var dbEntity = _context.FashionModels.First(x => x.Id == id);
+            var dbEntity = _context.FashionModels.FirstOrDefault(x => x.Id == id);
+
+            if (dbEntity == null)
+                return;
+
             _context.FashionModels.Remove(dbEntity);
             _context.SaveChanges();
         }
