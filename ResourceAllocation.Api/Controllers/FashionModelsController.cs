@@ -32,14 +32,14 @@ namespace ResourceAllocation.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put(FashionModelEntity entity)
+        public IActionResult Put(Artist entity)
         {
             _fashionModelsService.Add(entity);
             return Ok();
         }
 
         [HttpPatch]
-        public IActionResult Patch(FashionModelEntity entity)
+        public IActionResult Patch(Artist entity)
         {
             _fashionModelsService.Update(entity);
             return Ok();

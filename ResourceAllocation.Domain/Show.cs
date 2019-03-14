@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ResourceAllocation.Domain
 {
-    public class ShowEntity : BaseEntity
+    public class Show : BaseEntity
     {
         public string Designer { get; set; }
         public DateTime Date { get; set; }

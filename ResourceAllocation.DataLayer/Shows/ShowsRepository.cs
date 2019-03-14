@@ -14,7 +14,7 @@ namespace ResourceAllocation.DataLayer.Shows
             _context = context;
         }
 
-        public void Add(ShowEntity entity)
+        public void Add(Show entity)
         {
             entity.DateCreated = DateTime.Now.ToUniversalTime();
             _context.Shows.Add(entity);
@@ -28,20 +28,20 @@ namespace ResourceAllocation.DataLayer.Shows
             _context.SaveChanges();
         }
 
-        public IEnumerable<ShowEntity> GetAll()
+        public IEnumerable<Show> GetAll()
         {
             var result = _context.Shows.ToList();
 
             return result;
         }
 
-        public ShowEntity GetById(Guid id)
+        public Show GetById(Guid id)
         {
             var result = _context.Shows.FirstOrDefault(x => x.Id == id);
             return result;
         }
 
-        public void Update(ShowEntity entity)
+        public void Update(Show entity)
         {
             var dbEntity = _context.Shows.First(x => x.Id == entity.Id);
             dbEntity.Designer = entity.Designer;

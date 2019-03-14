@@ -12,15 +12,22 @@ namespace ResourceAllocation.DataLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DesignerFashionModelEntity>()
-                .HasKey(sc => new {sc.DesignerEntityId, sc.FashionModelEntityId});
-        }
+            modelBuilder.Entity<DesignerArtists>().HasKey(x => new { x.ArtistId, x.DesignerId });
 
-        public DbSet<FashionModelEntity> FashionModels { get; set; }
-        public DbSet<DesignerEntity> Designers { get; set; }
-        public DbSet<ShowEntity> Shows { get; set; }
+            modelBuilder.Entity<DesignerArtists>()
+                .HasOne(bc => bc.Artist)
+                .WithMany(b => b.FavoriteForDesigners)
+                .HasForeignKey(bc => bc.ArtistId);
+            modelBuilder.Entity<DesignerArtists>()
+                .HasOne(bc => bc.Designer)
+                .WithMany(c => c.FavoriteArtists)
+                .HasForeignKey(bc => bc.DesignerId);
 
-        public DbSet<DesignerFashionModelEntity> DesignerFavoriteFashionModels { get; set; }
-        public DbSet<DesignerFashionModelEntity> DesignerAllocatedFashionModels { get; set; }
+        }   
+
+        public DbSet<Artist> Artists { get; set; }
+        public DbSet<Designer> Designers { get; set; }
+        public DbSet<Show> Shows { get; set; }
+         
     }
 }

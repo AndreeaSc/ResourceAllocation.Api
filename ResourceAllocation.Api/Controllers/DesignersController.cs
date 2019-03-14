@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ResourceAllocation.Domain;
 using ResourceAllocation.Services.Designers;
@@ -32,22 +33,23 @@ namespace ResourceAllocation.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id:Guid}/algorithm")]
-        public IActionResult GetResultedModelsById(Guid id)
+        [HttpPost]
+        [Route("{id:Guid}/set-favourite-models")]
+        public IActionResult SetFavouritesModels(Guid id, [FromBody]List<Guid> fashionModelIds)
         {
-            var result = _designersService.GetById(id);
-            return Ok(result);
+            _designersService.SetFavouriteModels(id, fashionModelIds);
+            return Ok();
         }
 
         [HttpPut]
-        public IActionResult Put(DesignerEntity entity)
+        public IActionResult Put(Designer entity)
         {
             _designersService.Add(entity);
             return Ok();
         }
 
         [HttpPatch]
-        public IActionResult Patch(DesignerEntity entity)
+        public IActionResult Patch(Designer entity)
         {
            _designersService.Update(entity);
             return Ok();
