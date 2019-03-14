@@ -14,7 +14,7 @@ namespace ResourceAllocation.Services.Shows
             _showsRepository = showsRepository;
         }
 
-        public void Add(ShowEntity entity)
+        public void Add(Show entity)
         {
             _showsRepository.Add(entity);
         }
@@ -24,19 +24,19 @@ namespace ResourceAllocation.Services.Shows
             _showsRepository.Delete(id);
         }
 
-        public IEnumerable<ShowEntity> GetAll()
+        public IEnumerable<Show> GetAll()
         {
             var result = _showsRepository.GetAll();
             return result;
         }
 
-        public ShowEntity GetById(Guid id)
+        public Show GetById(Guid id)
         {
             var result = _showsRepository.GetById(id);
             return result;
         }
 
-        public void Update(ShowEntity entity)
+        public void Update(Show entity)
         {
             _showsRepository.Update(entity);
         }

@@ -1,11 +1,10 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using ResourceAllocation.DataLayer;
 using ResourceAllocation.DataLayer.Designers;
 using ResourceAllocation.DataLayer.FashionModels;
@@ -33,7 +32,9 @@ namespace ResourceAllocation.Api
                 options.AddPolicy("LocalCorsConfig", policy => policy.WithOrigins("http://localhost:4200"));
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<IFashionModelsService, FashionModelsService>();
             services.AddTransient<IFashionModelsRepository, FashionModelsRepository>();
@@ -44,7 +45,7 @@ namespace ResourceAllocation.Api
             services.AddTransient<IShowsService, ShowsService>();
             services.AddTransient<IShowsRepository, ShowsRepository>();
 
-            var connection = @"Server=(localdb)\mssqllocaldb;Database=ResourceAllocation;Trusted_Connection=True;ConnectRetryCount=0";
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=ModelLinK;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<ResourceAllocationDbContext>
                 (options => options.UseSqlServer(connection));
         }

@@ -6,10 +6,10 @@ namespace ResourceAllocation.Services.Shows
 {
     public interface IShowsService
     {
-        void Add(ShowEntity entity);
+        void Add(Show entity);
         void Delete(Guid id);
-        IEnumerable<ShowEntity> GetAll();
-        ShowEntity GetById(Guid id);
-        void Update(ShowEntity entity);
+        IEnumerable<Show> GetAll();
+        Show GetById(Guid id);
+        void Update(Show entity);
     }
 }

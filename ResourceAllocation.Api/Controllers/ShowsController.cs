@@ -33,14 +33,14 @@ namespace ResourceAllocation.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put(ShowEntity entity)
+        public IActionResult Put(Show entity)
         {
             _showsService.Add(entity);
             return Ok();
         }
 
         [HttpPatch]
-        public IActionResult Patch(ShowEntity entity)
+        public IActionResult Patch(Show entity)
         {
             _showsService.Update(entity);
             return Ok();

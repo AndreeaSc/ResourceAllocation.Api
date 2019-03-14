@@ -6,10 +6,10 @@ namespace ResourceAllocation.Services.FashionModels
 {
     public interface IFashionModelsService
     {
-        void Add(FashionModelEntity entity);
+        void Add(Artist entity);
         void Delete(Guid id);
-        IEnumerable<FashionModelEntity> GetAll();
-        FashionModelEntity GetById(Guid id);
-        void Update(FashionModelEntity entity);
+        IEnumerable<Artist> GetAll();
+        Artist GetById(Guid id);
+        void Update(Artist entity);
     }
 }

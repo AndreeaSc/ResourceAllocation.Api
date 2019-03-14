@@ -1,6 +1,10 @@
-﻿namespace ResourceAllocation.Domain
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ResourceAllocation.Domain
 {
-    public class FashionModelEntity : BaseEntity
+    public class Artist : BaseEntity
     {
         public string Name { get; set; }
         public int Height { get; set; }
@@ -15,6 +19,8 @@
         public string Description { get; set; }
         public string Photo { get; set; }
         public string Gender { get; set; }
-        public int Prioriy { get; set; }
+
+        public IList<DesignerArtists> FavoriteForDesigners { get; set; }
+
     }
 }

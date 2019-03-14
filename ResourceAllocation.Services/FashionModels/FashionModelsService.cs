@@ -15,24 +15,24 @@ namespace ResourceAllocation.Services.FashionModels
             _fashionModelsRepository = fashionModelsRepository;
         }
 
-        public IEnumerable<FashionModelEntity> GetAll()
+        public IEnumerable<Artist> GetAll()
         {
             var result = _fashionModelsRepository.GetAll();
             return result;
         }
 
-        public FashionModelEntity GetById(Guid id)
+        public Artist GetById(Guid id)
         {
             var result = _fashionModelsRepository.GetById(id);
             return result;
         }
 
-        public void Add(FashionModelEntity entity)
+        public void Add(Artist entity)
         {
             _fashionModelsRepository.Add(entity);
         }
 
-        public void Update(FashionModelEntity entity)
+        public void Update(Artist entity)
         {
             _fashionModelsRepository.Update(entity);
         }

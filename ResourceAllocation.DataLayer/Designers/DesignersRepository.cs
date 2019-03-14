@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using ResourceAllocation.DataLayer.FashionModels;
 using ResourceAllocation.Domain;
 
@@ -15,54 +16,79 @@ namespace ResourceAllocation.DataLayer.Designers
             _context = context;
         }
 
-        public IEnumerable<DesignerEntity> GetAll()
+        public IEnumerable<Designer> GetAll()
         {
-            var result = _context.Designers.ToList();
+            var result = _context.Designers.Include(designer => designer.FavoriteArtists).ThenInclude(x=>x.Artist).ToList();
 
+            return result;  
+        }   
+
+        public Designer GetById(Guid id)
+        {
+            var result = _context.Designers
+                .Include(x => x.FavoriteArtists)
+                .ThenInclude(a => a.Artist)
+                .FirstOrDefault(x => x.Id == id);
             return result;
         }
 
-        public DesignerEntity GetById(Guid id)
+        public IEnumerable<Artist> GetResultedModelsById(Guid id)
         {
-            var result = _context.Designers.FirstOrDefault(x => x.Id == id);
-            return result;
-        }
-
-        public IEnumerable<FashionModelEntity> GetResultedModelsById(Guid id)
-        {
-            List<DesignerEntity> designers = new List<DesignerEntity>();
-            List<FashionModelEntity> fashionModels = new List<FashionModelEntity>();
+            List<Designer> designers = new List<Designer>();
+            List<Artist> fashionModels = new List<Artist>();
             
             var designersAfterAlgorithm = ExecuteAlgorithm(designers, fashionModels);
 
-            List<FashionModelEntity> result = new List<FashionModelEntity>();
+            var result = new List<Artist>();
 
             foreach (var designer in designersAfterAlgorithm)
             {
                 if (designer.Id == id)
-                    result = designer.AllocatedFashionModels;
+                    result = designer.FavoriteArtists.Select(x=>x.Artist).ToList();
             }
             
             return result;
         }
 
-        public void Add(DesignerEntity entity)
+        public void Add(Designer entity)
         {
             entity.DateCreated = DateTime.Now.ToUniversalTime();
             _context.Designers.Add(entity);
             _context.SaveChanges();
         }
 
-        public void Update(DesignerEntity entity)
+        public void Update(Designer entity)
         {
             var dbEntity = _context.Designers.First(x => x.Id == entity.Id);
             dbEntity.Name = entity.Name;
             dbEntity.Mail = entity.Mail;
             dbEntity.Surname = entity.Surname;
             dbEntity.Password = entity.Password;
-            dbEntity.FavoriteFashionModels = entity.FavoriteFashionModels;
+            dbEntity.FavoriteArtists = entity.FavoriteArtists;
             _context.Designers.Update(dbEntity);
             _context.SaveChanges();
+        }
+
+        public void SetFavouriteModels(Guid id, List<Guid> fashionModelIds)
+        {
+            var designer = _context.Designers
+                .Include(x => x.FavoriteArtists)
+                .ThenInclude(a => a.Artist)
+                .First(x => x.Id == id);
+
+            designer.FavoriteArtists.Clear();
+            foreach (var artistId in fashionModelIds)
+            {
+                designer.FavoriteArtists.Add(new DesignerArtists
+                {
+                    ArtistId = artistId,    
+                    DesignerId = id
+                });  
+            }
+      
+            _context.SaveChanges();
+            var favoriteAritsts = _context.Designers.Find(id).FavoriteArtists;
+
         }
 
         public void Delete(Guid id)
@@ -72,11 +98,11 @@ namespace ResourceAllocation.DataLayer.Designers
             _context.SaveChanges();
         }
 
-        private static List<Guid> GetCommonModels(DesignerEntity designer, DesignerEntity otherDesigner, List<CommonFashionModelEntity> commonFashionModels)
+        private static List<Guid> GetCommonModels(Designer designer, Designer otherDesigner, List<CommonFashionModelEntity> commonFashionModels)
         {
-            var commonModelsIds = designer.FavoriteFashionModels
-                .Where(x => otherDesigner.AllocatedFashionModels.Any(y => y.Id == x.Id))
-                .Select(x => x.Id)
+            var commonModelsIds = designer.FavoriteArtists
+                .Where(x => otherDesigner.FavoriteArtists.Any(y => y.ArtistId == x.ArtistId))
+                .Select(x => x.ArtistId)
                 .ToList();
 
             foreach (var commonModelsId in commonModelsIds)
@@ -92,36 +118,36 @@ namespace ResourceAllocation.DataLayer.Designers
             return commonModelsIds;
         }
 
-        private static int GetModelPosition(DesignerEntity firstDesigner, CommonFashionModelEntity model)
+        private static int GetModelPosition(Designer firstDesigner, CommonFashionModelEntity model)
         {
-            for (int i = 0; i < firstDesigner.FavoriteFashionModels.Count; i++)
+            for (int i = 0; i < firstDesigner.FavoriteArtists.Count; i++)
             {
-                if (firstDesigner.FavoriteFashionModels[i].Id == model.FashionModelId)
+                if (firstDesigner.FavoriteArtists[i].ArtistId == model.FashionModelId)
                     return i;
             }
 
             return -1;
         }
 
-        static List<FashionModelEntity> RemoveFashionModels(List<FashionModelEntity> models, List<Guid> idsToRemove)
+        static List<Artist> RemoveFashionModels(List<Artist> models, List<Guid> idsToRemove)
         {
             return models.Where(x => !idsToRemove.Contains(x.Id)).ToList();
         }
 
-        private static int GetDesignerScore(DesignerEntity firstDesigner)
+        private static int GetDesignerScore(Designer firstDesigner)
         {
             var result = 0;
 
-            for (int i = 0; i < firstDesigner.AllocatedFashionModels.Count; i++)
-            {
-                if (firstDesigner.FavoriteFashionModels.Any(x => x.Id == firstDesigner.AllocatedFashionModels[i].Id))
-                    result += firstDesigner.AllocatedFashionModels[i].Prioriy;
-            }
+            //for (int i = 0; i < firstDesigner.AllocatedFashionModels.Count; i++)
+            //{
+            //    if (firstDesigner.FavoriteFashionModels.Any(x => x.Id == firstDesigner.AllocatedFashionModels[i].Id))
+            //        result += firstDesigner.AllocatedFashionModels[i].Prioriy;
+            //}
 
             return result;
         }
 
-        private static List<DesignerEntity> ExecuteAlgorithm(List<DesignerEntity> designers, List<FashionModelEntity> fashionModels)
+        private static List<Designer> ExecuteAlgorithm(List<Designer> designers, List<Artist> fashionModels)
         {
             List<CommonFashionModelEntity> commonFashionModels = new List<CommonFashionModelEntity>();
 
@@ -136,7 +162,7 @@ namespace ResourceAllocation.DataLayer.Designers
                 }
             }
 
-            foreach (var commonModel in commonFashionModels)
+            foreach (var commonModel in commonFashionModels)    
             {
                 var firstDesigner = designers.First(x => x.Id == commonModel.FirstDesigner);
                 var firstDesignerModelPosition = GetModelPosition(firstDesigner, commonModel);
@@ -144,44 +170,44 @@ namespace ResourceAllocation.DataLayer.Designers
                 var secondDesigner = designers.First(x => x.Id == commonModel.SecondDesigner);
                 var secondDesignerModelPosition = GetModelPosition(secondDesigner, commonModel);
 
-                var commonModelsIds = firstDesigner.AllocatedFashionModels
-                    .Where(x => secondDesigner.AllocatedFashionModels.Any(y => y.Id == x.Id))
-                    .Select(x => x.Id)
+                var commonModelsIds = firstDesigner.FavoriteArtists
+                    .Where(x => secondDesigner.FavoriteArtists.Any(y => y.ArtistId == x.ArtistId))
+                    .Select(x => x.ArtistId)
                     .ToList();
 
-                if (firstDesignerModelPosition < secondDesignerModelPosition)
-                {
-                    secondDesigner.AllocatedFashionModels =
-                        RemoveFashionModels(secondDesigner.AllocatedFashionModels, commonModelsIds);
-                }
-                else if (firstDesignerModelPosition > secondDesignerModelPosition)
-                {
-                    firstDesigner.AllocatedFashionModels =
-                        RemoveFashionModels(firstDesigner.AllocatedFashionModels, commonModelsIds);
-                }
-                else if (firstDesignerModelPosition == secondDesignerModelPosition)
-                {
-                    var firstDesignerScore = GetDesignerScore(firstDesigner);
-                    var secondDesignerScore = GetDesignerScore(secondDesigner);
+                //if (firstDesignerModelPosition < secondDesignerModelPosition)
+                //{
+                //    List<Artist> artists = secondDesigner.FavoriteArtists.Select(x => x.FavoriteArtist).ToList();
+                //    secondDesigner.FavoriteArtists = RemoveFashionModels(artists, commonModelsIds);
+                //}
+                //else if (firstDesignerModelPosition > secondDesignerModelPosition)
+                //{
+                //    firstDesigner.FavoriteArtists =
+                //        RemoveFashionModels(firstDesigner.FavoriteArtists.Select(x=>x.FavoriteArtistId), commonModelsIds);
+                //}
+                //else if (firstDesignerModelPosition == secondDesignerModelPosition)
+                //{
+                //    var firstDesignerScore = GetDesignerScore(firstDesigner);
+                //    var secondDesignerScore = GetDesignerScore(secondDesigner);
 
-                    if (firstDesignerScore < secondDesignerScore)
-                    {
-                        firstDesigner.AllocatedFashionModels =
-                            RemoveFashionModels(firstDesigner.AllocatedFashionModels, commonModelsIds);
-                    }
-                    else if (firstDesignerScore > secondDesignerScore)
-                    {
-                        secondDesigner.AllocatedFashionModels =
-                            RemoveFashionModels(secondDesigner.AllocatedFashionModels, commonModelsIds);
-                    }
-                    else
-                    {
-                        firstDesigner.AllocatedFashionModels =
-                            RemoveFashionModels(firstDesigner.AllocatedFashionModels, commonModelsIds);
-                        secondDesigner.AllocatedFashionModels =
-                            RemoveFashionModels(secondDesigner.AllocatedFashionModels, commonModelsIds);
-                    }
-                }
+                //    if (firstDesignerScore < secondDesignerScore)
+                //    {
+                //        firstDesigner.FavoriteArtists =
+                //            RemoveFashionModels(firstDesigner.FavoriteArtists, commonModelsIds);
+                //    }
+                //    else if (firstDesignerScore > secondDesignerScore)
+                //    {
+                //        secondDesigner.FavoriteArtists =
+                //            RemoveFashionModels(secondDesigner.FavoriteArtists, commonModelsIds);
+                //    }
+                //    else
+                //    {
+                //        firstDesigner.FavoriteArtists =
+                //            RemoveFashionModels(firstDesigner.FavoriteArtists, commonModelsIds);
+                //        secondDesigner.FavoriteArtists =
+                //            RemoveFashionModels(secondDesigner.FavoriteArtists, commonModelsIds);
+                //    }
+                //}
             }
             return designers;
         }

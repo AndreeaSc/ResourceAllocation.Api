@@ -14,7 +14,7 @@ namespace ResourceAllocation.Services.Designers
             _designersRepository = designersRepository;
         }
 
-        public void Add(DesignerEntity entity)
+        public void Add(Designer entity)
         {
              _designersRepository.Add(entity);
         }
@@ -24,27 +24,26 @@ namespace ResourceAllocation.Services.Designers
             _designersRepository.Delete(id);
         }
 
-        public IEnumerable<DesignerEntity> GetAll()
+        public IEnumerable<Designer> GetAll()
         {
             var result = _designersRepository.GetAll();
             return result;
         }
 
-        public  DesignerEntity GetById(Guid id)
+        public  Designer GetById(Guid id)
         {
             var result = _designersRepository.GetById(id);
             return result;
         }
-
-        public IEnumerable<FashionModelEntity> GetResultedModelsById(Guid id)
-        {
-            var result = _designersRepository.GetResultedModelsById(id);
-            return result;
-        }
         
-        public void Update(DesignerEntity entity)
+        public void Update(Designer entity)
         {
             _designersRepository.Update(entity);
+        }
+
+        public void SetFavouriteModels(Guid id, List<Guid> fashionModelIds)
+        {
+            _designersRepository.SetFavouriteModels(id, fashionModelIds);
         }
     }
 }

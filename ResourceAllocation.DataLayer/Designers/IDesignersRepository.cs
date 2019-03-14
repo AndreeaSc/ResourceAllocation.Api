@@ -6,11 +6,11 @@ namespace ResourceAllocation.DataLayer.Designers
 {
    public interface IDesignersRepository
     {
-        void Add(DesignerEntity entity);
+        void Add(Designer entity);
         void Delete(Guid id);
-        IEnumerable<DesignerEntity> GetAll();
-        DesignerEntity GetById(Guid id);
-        IEnumerable<FashionModelEntity> GetResultedModelsById(Guid idGuid);
-        void Update(DesignerEntity entity);
+        IEnumerable<Designer> GetAll();
+        Designer GetById(Guid id);
+        void Update(Designer entity);
+        void SetFavouriteModels(Guid id, List<Guid> fashionModelIds);
     }
 }
