@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using ResourceAllocation.DataLayer.FashionModels;
+using ResourceAllocation.DataLayer.Artists;
 using ResourceAllocation.Domain;
 
 namespace ResourceAllocation.DataLayer.Designers
@@ -35,9 +35,9 @@ namespace ResourceAllocation.DataLayer.Designers
         public IEnumerable<Artist> GetResultedModelsById(Guid id)
         {
             List<Designer> designers = new List<Designer>();
-            List<Artist> fashionModels = new List<Artist>();
+            List<Artist> artists = new List<Artist>();
             
-            var designersAfterAlgorithm = ExecuteAlgorithm(designers, fashionModels);
+            var designersAfterAlgorithm = ExecuteAlgorithm(designers, artists);
 
             var result = new List<Artist>();
 
@@ -69,7 +69,7 @@ namespace ResourceAllocation.DataLayer.Designers
             _context.SaveChanges();
         }
 
-        public void SetFavouriteModels(Guid id, List<Guid> fashionModelIds)
+        public void SetArtists(Guid id, List<Guid> artistIds)
         {
             var designer = _context.Designers
                 .Include(x => x.FavoriteArtists)
@@ -77,7 +77,7 @@ namespace ResourceAllocation.DataLayer.Designers
                 .First(x => x.Id == id);
 
             designer.FavoriteArtists.Clear();
-            foreach (var artistId in fashionModelIds)
+            foreach (var artistId in artistIds)
             {
                 designer.FavoriteArtists.Add(new DesignerArtists
                 {
@@ -98,7 +98,7 @@ namespace ResourceAllocation.DataLayer.Designers
             _context.SaveChanges();
         }
 
-        private static List<Guid> GetCommonModels(Designer designer, Designer otherDesigner, List<CommonFashionModelEntity> commonFashionModels)
+        private static List<Guid> GetCommonModels(Designer designer, Designer otherDesigner, List<CommonArtistEntity> commonArtists)
         {
             var commonModelsIds = designer.FavoriteArtists
                 .Where(x => otherDesigner.FavoriteArtists.Any(y => y.ArtistId == x.ArtistId))
@@ -107,22 +107,22 @@ namespace ResourceAllocation.DataLayer.Designers
 
             foreach (var commonModelsId in commonModelsIds)
             {
-                commonFashionModels.Add(new CommonFashionModelEntity
+                commonArtists.Add(new CommonArtistEntity()
                 {
                     FirstDesigner = designer.Id,
                     SecondDesigner = otherDesigner.Id,
-                    FashionModelId = commonModelsId
+                    ArtistId = commonModelsId
                 });
             }
 
             return commonModelsIds;
         }
 
-        private static int GetModelPosition(Designer firstDesigner, CommonFashionModelEntity model)
+        private static int GetModelPosition(Designer firstDesigner, CommonArtistEntity model)
         {
             for (int i = 0; i < firstDesigner.FavoriteArtists.Count; i++)
             {
-                if (firstDesigner.FavoriteArtists[i].ArtistId == model.FashionModelId)
+                if (firstDesigner.FavoriteArtists[i].ArtistId == model.ArtistId)
                     return i;
             }
 
@@ -149,7 +149,7 @@ namespace ResourceAllocation.DataLayer.Designers
 
         private static List<Designer> ExecuteAlgorithm(List<Designer> designers, List<Artist> fashionModels)
         {
-            List<CommonFashionModelEntity> commonFashionModels = new List<CommonFashionModelEntity>();
+            List<CommonArtistEntity> commonFashionModels = new List<CommonArtistEntity>();
 
             foreach (var firstDesigner in designers)
             {

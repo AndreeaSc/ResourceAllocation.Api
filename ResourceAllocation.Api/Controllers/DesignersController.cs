@@ -35,9 +35,9 @@ namespace ResourceAllocation.Api.Controllers
 
         [HttpPost]
         [Route("{id:Guid}/set-favourite-models")]
-        public IActionResult SetFavouritesModels(Guid id, [FromBody]List<Guid> fashionModelIds)
+        public IActionResult SetFavouritesArtists(Guid id, [FromBody]List<Guid> ArtistIds)
         {
-            _designersService.SetFavouriteModels(id, fashionModelIds);
+            _designersService.SetFavouriteArtists(id, ArtistIds);
             return Ok();
         }
 

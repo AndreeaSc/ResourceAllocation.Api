@@ -11,6 +11,6 @@ namespace ResourceAllocation.DataLayer.Designers
         IEnumerable<Designer> GetAll();
         Designer GetById(Guid id);
         void Update(Designer entity);
-        void SetFavouriteModels(Guid id, List<Guid> fashionModelIds);
+        void SetArtists(Guid id, List<Guid> artistIds);
     }
 }

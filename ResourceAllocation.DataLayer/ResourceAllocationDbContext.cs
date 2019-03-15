@@ -17,7 +17,7 @@ namespace ResourceAllocation.DataLayer
             modelBuilder.Entity<DesignerArtists>()
                 .HasOne(bc => bc.Artist)
                 .WithMany(b => b.FavoriteForDesigners)
-                .HasForeignKey(bc => bc.ArtistId);
+                .HasForeignKey(bc => bc.ArtistId);  
             modelBuilder.Entity<DesignerArtists>()
                 .HasOne(bc => bc.Designer)
                 .WithMany(c => c.FavoriteArtists)
