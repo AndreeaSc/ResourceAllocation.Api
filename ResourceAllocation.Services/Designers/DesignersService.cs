@@ -41,9 +41,9 @@ namespace ResourceAllocation.Services.Designers
             _designersRepository.Update(entity);
         }
 
-        public void SetFavouriteModels(Guid id, List<Guid> fashionModelIds)
+        public void SetFavouriteArtists(Guid id, List<Guid> artistIds)
         {
-            _designersRepository.SetFavouriteModels(id, fashionModelIds);
+            _designersRepository.SetArtists(id, artistIds);
         }
     }
 }

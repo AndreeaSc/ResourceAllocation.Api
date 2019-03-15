@@ -46,7 +46,7 @@ namespace ResourceAllocation.DataLayer.Shows
             var dbEntity = _context.Shows.First(x => x.Id == entity.Id);
             dbEntity.Designer = entity.Designer;
             dbEntity.Date = entity.Date;
-            dbEntity.FashionModelsName = entity.FashionModelsName;
+            dbEntity.ArtistsName = entity.ArtistsName;
             dbEntity.Location = entity.Location;
             _context.Shows.Update(dbEntity);
             _context.SaveChanges();

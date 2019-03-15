@@ -7,10 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using ResourceAllocation.DataLayer;
 using ResourceAllocation.DataLayer.Designers;
-using ResourceAllocation.DataLayer.FashionModels;
+using ResourceAllocation.DataLayer.Artists;
 using ResourceAllocation.DataLayer.Shows;
 using ResourceAllocation.Services.Designers;
-using ResourceAllocation.Services.FashionModels;
+using ResourceAllocation.Services.Artists;
 using ResourceAllocation.Services.Shows;
 
 namespace ResourceAllocation.Api
@@ -36,8 +36,8 @@ namespace ResourceAllocation.Api
                 .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddTransient<IFashionModelsService, FashionModelsService>();
-            services.AddTransient<IFashionModelsRepository, FashionModelsRepository>();
+            services.AddTransient<IArtistsService, ArtistsService>();
+            services.AddTransient<IArtistsRepository, ArtistsRepository>();
 
             services.AddTransient<IDesignersService, DesignersService>();
             services.AddTransient<IDesignersRepository, DesignersRepository>();
