@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using ResourceAllocation.DataLayer.Artists;
 using ResourceAllocation.Domain;
 
 namespace ResourceAllocation.DataLayer.Designers

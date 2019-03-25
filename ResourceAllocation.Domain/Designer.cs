@@ -10,5 +10,8 @@ namespace ResourceAllocation.Domain
         public string Mail { get; set; }
         public string Password { get; set; }
         public List<DesignerArtists> FavoriteArtists { get; set; } = new List<DesignerArtists>();
+
+        [NotMapped]
+        public List<Artist> AllocatedArtists { get; set; }
     }
 }
