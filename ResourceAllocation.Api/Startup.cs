@@ -11,6 +11,7 @@ using ResourceAllocation.DataLayer.Artists;
 using ResourceAllocation.DataLayer.Shows;
 using ResourceAllocation.Services.Designers;
 using ResourceAllocation.Services.Artists;
+using ResourceAllocation.Services.ResourceAllocation;
 using ResourceAllocation.Services.Shows;
 
 namespace ResourceAllocation.Api
@@ -44,6 +45,8 @@ namespace ResourceAllocation.Api
 
             services.AddTransient<IShowsService, ShowsService>();
             services.AddTransient<IShowsRepository, ShowsRepository>();
+
+            services.AddTransient<IResourceAllocationService, ResourceAllocationService>();
 
             var connection = @"Server=(localdb)\mssqllocaldb;Database=ModelLinK;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<ResourceAllocationDbContext>

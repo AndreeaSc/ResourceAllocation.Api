@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ResourceAllocation.Domain;
 using ResourceAllocation.Services.Shows;
