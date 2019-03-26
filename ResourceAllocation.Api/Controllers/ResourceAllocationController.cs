@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using ResourceAllocation.Domain;
 using ResourceAllocation.Services.ResourceAllocation;
 
 namespace ResourceAllocation.Api.Controllers
@@ -15,9 +17,10 @@ namespace ResourceAllocation.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public List<Designer> Get()
         {
-            return Ok();
+            var result = _resourceAllocationService.ExecuteAlgorithm();
+            return result;
         }
     }
 }
