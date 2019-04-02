@@ -9,4 +9,10 @@
     <ProjectReference Include="..\ResourceAllocation.Domain\ResourceAllocation.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.EnterpriseServices">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.EnterpriseServices.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

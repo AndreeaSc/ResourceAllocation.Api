@@ -12,6 +12,6 @@ namespace ResourceAllocation.Domain
         public List<DesignerArtists> FavoriteArtists { get; set; } = new List<DesignerArtists>();
 
         [NotMapped]
-        public List<Artist> AllocatedArtists { get; set; }
+        public List<DesignerArtists> AllocatedArtists { get; set; }
     }
 }
