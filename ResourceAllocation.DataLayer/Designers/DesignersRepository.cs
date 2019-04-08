@@ -28,6 +28,8 @@ namespace ResourceAllocation.DataLayer.Designers
                 .Include(x => x.FavoriteArtists)
                 .ThenInclude(a => a.Artist)
                 .FirstOrDefault(x => x.Id == id);
+
+            result.FavoriteArtists = result.FavoriteArtists.OrderBy(x => x.Order).ToList();
             return result;
         }
 
@@ -76,13 +78,17 @@ namespace ResourceAllocation.DataLayer.Designers
                 .First(x => x.Id == id);
 
             designer.FavoriteArtists.Clear();
+            var order = 0;
             foreach (var artistId in artistIds)
             {
                 designer.FavoriteArtists.Add(new DesignerArtists
                 {
                     ArtistId = artistId,    
-                    DesignerId = id
-                });  
+                    DesignerId = id,
+                    Order = order
+                });
+
+                order++;
             }
       
             _context.SaveChanges();

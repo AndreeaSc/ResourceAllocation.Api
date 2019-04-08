@@ -69,7 +69,7 @@ namespace ResourceAllocation.Api
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<ResourceAllocationDbContext>();
                 context.Database.EnsureCreated();
-                context.Database.Migrate();
+                //context.Database.Migrate();
             }
 
             app.UseHttpsRedirection();
