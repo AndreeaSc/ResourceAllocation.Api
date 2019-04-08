@@ -8,5 +8,6 @@ namespace ResourceAllocation.Domain
         public Guid ArtistId { get; set; }
         public Artist Artist { get; set; }
         public Designer Designer { get; set; }
+        public int Order { get; set; }
     }
 }

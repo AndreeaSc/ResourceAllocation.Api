@@ -46,6 +46,9 @@ namespace ResourceAllocation.Services.ResourceAllocation
                     .Select(x => x.ArtistId)
                     .ToList();
 
+                firstDesigner.AllocatedArtists = firstDesigner.FavoriteArtists;
+                secondDesigner.AllocatedArtists = secondDesigner.FavoriteArtists;
+
                 if (firstDesignerModelPosition < secondDesignerModelPosition)
                 {
                     List<Artist> artists = secondDesigner.FavoriteArtists.Select(x => x.Artist).ToList();
@@ -55,6 +58,13 @@ namespace ResourceAllocation.Services.ResourceAllocation
                 {
                     List<Artist> artists = firstDesigner.FavoriteArtists.Select(x => x.Artist).ToList();
                     firstDesigner.AllocatedArtists = RemoveFashionModels(artists, commonModelsIds, firstDesigner);
+                }
+                else if (firstDesignerModelPosition == secondDesignerModelPosition)
+                {
+                    List<Artist> artists = firstDesigner.FavoriteArtists.Select(x => x.Artist).ToList();
+                    firstDesigner.AllocatedArtists = RemoveFashionModels(artists, commonModelsIds, firstDesigner);
+                    artists = secondDesigner.FavoriteArtists.Select(x => x.Artist).ToList();
+                    secondDesigner.AllocatedArtists = RemoveFashionModels(artists, commonModelsIds, secondDesigner);
                 }
                 //else if (firstDesignerModelPosition == secondDesignerModelPosition)
                 //{
@@ -103,11 +113,11 @@ namespace ResourceAllocation.Services.ResourceAllocation
             return commonModelsIds;
         }
 
-        private static int GetModelPosition(Designer firstDesigner, CommonArtistEntity model)
+        private static int GetModelPosition(Designer designer, CommonArtistEntity model)
         {
-            for (int i = 0; i < firstDesigner.FavoriteArtists.Count; i++)
+            for (int i = 0; i < designer.FavoriteArtists.Count; i++)
             {
-                if (firstDesigner.FavoriteArtists[i].ArtistId == model.ArtistId)
+                if (designer.FavoriteArtists[i].ArtistId == model.ArtistId)
                     return i;
             }
 
@@ -118,6 +128,8 @@ namespace ResourceAllocation.Services.ResourceAllocation
         {
             return designer.FavoriteArtists.Where(x => !idsToRemove.Contains(x.ArtistId)).ToList();
         }
+
+        ////////////aici ceva de genu pt a calcula scorul. atunci cand elimin o fata, modific scoru, iar scorul este lungimea listei
 
         //private static int GetDesignerScore(Designer designer)
         //{
