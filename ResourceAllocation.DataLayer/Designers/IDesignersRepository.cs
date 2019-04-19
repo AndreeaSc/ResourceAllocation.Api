@@ -8,7 +8,7 @@ namespace ResourceAllocation.DataLayer.Designers
     {
         void Add(Designer entity);
         void Delete(Guid id);
-        IEnumerable<Designer> GetAll();
+        List<Designer> GetAll();
         Designer GetById(Guid id);
         void Update(Designer entity);
         void SetArtists(Guid id, List<Guid> artistIds);

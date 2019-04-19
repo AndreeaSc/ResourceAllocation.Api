@@ -21,6 +21,5 @@ namespace ResourceAllocation.Domain
         public string Gender { get; set; }
 
         public IList<DesignerArtists> FavoriteForDesigners { get; set; }
-
     }
 }
