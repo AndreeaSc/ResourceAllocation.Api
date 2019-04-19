@@ -13,5 +13,8 @@ namespace ResourceAllocation.Domain
 
         [NotMapped]
         public List<DesignerArtists> AllocatedArtists { get; set; }
+
+        [NotMapped]
+        public int Score { get; set; }
     }
 }

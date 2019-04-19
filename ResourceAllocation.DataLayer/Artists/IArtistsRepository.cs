@@ -8,7 +8,7 @@ namespace ResourceAllocation.DataLayer.Artists
     {
         void Add(Artist entity);
         void Delete(Guid id);
-        IEnumerable<Artist> GetAll();
+        List<Artist> GetAll();
         Artist GetById(Guid id);
         void Update(Artist entity);
     }

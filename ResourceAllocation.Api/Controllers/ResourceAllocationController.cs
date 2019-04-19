@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using ResourceAllocation.DataLayer.Artists;
+using ResourceAllocation.DataLayer.Designers;
 using ResourceAllocation.Domain;
 using ResourceAllocation.Services.ResourceAllocation;
 
@@ -11,15 +13,25 @@ namespace ResourceAllocation.Api.Controllers
     {
         private readonly IResourceAllocationService _resourceAllocationService;
 
-        public ResourceAllocationController(IResourceAllocationService resourceAllocationService)
+        private readonly IDesignersRepository _designerRepository;
+
+        private readonly IArtistsRepository _artistsRepository;
+
+        public ResourceAllocationController(IResourceAllocationService resourceAllocationService, IDesignersRepository designerRepository, IArtistsRepository artistsRepository)
         {
             _resourceAllocationService = resourceAllocationService;
+            _designerRepository = designerRepository;
+            _artistsRepository = artistsRepository;
         }
 
         [HttpGet]
         public List<Designer> Get()
         {
-            var result = _resourceAllocationService.ExecuteAlgorithm();
+            var designers = _designerRepository.GetAll();
+            var artists = _artistsRepository.GetAll();
+
+            var result = _resourceAllocationService.ExecuteAlgorithm(designers, artists);
+
             return result;
         }
     }

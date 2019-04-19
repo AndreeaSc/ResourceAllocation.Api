@@ -15,7 +15,7 @@ namespace ResourceAllocation.DataLayer.Artists
             _context = context;
         }
 
-        public IEnumerable<Artist> GetAll()
+        public List<Artist> GetAll()
         {
             var result = _context.Artists.Include(x=>x.FavoriteForDesigners).ThenInclude(x=>x.Designer)
                 .OrderByDescending(x => x.DateCreated)
