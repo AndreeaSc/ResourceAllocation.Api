@@ -19,6 +19,11 @@ namespace ResourceAllocation.DataLayer.Designers
         {
             var result = _context.Designers.Include(designer => designer.FavoriteArtists).ThenInclude(x=>x.Artist).ToList();
 
+            foreach (var designer in result)
+            {
+                designer.FavoriteArtists = designer.FavoriteArtists.OrderBy(x => x.Order).ToList();
+            }
+
             return result;  
         }   
 
