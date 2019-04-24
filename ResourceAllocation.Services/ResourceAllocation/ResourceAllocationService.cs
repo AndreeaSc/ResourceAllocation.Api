@@ -58,7 +58,17 @@ namespace ResourceAllocation.Services.ResourceAllocation
 
             return -1;
         }
-        
+
+        private static int getScore(Designer designer)
+        {
+            if (designer.FavoriteArtists != designer.AllocatedArtists)
+            {
+                designer.Score = designer.Score + designer.FavoriteArtists.Count - designer.AllocatedArtists.Count;
+            }
+
+            return designer.Score;
+        }
+
         public List<Designer> ExecuteAlgorithm(List<Designer> designers, List<Artist> fashionModel)
         {
             {
@@ -97,17 +107,15 @@ namespace ResourceAllocation.Services.ResourceAllocation
                     {
                         List<Artist> artists = secondDesigner.FavoriteArtists.Select(x => x.Artist).ToList();
                         secondDesigner.AllocatedArtists = RemoveFashionModels(artists, commonModelsIds);
-                        secondDesigner.Score = secondDesigner.Score + commonModelsIds.Count;
                     }
                     else if (firstDesignerModelPosition > secondDesignerModelPosition)
                     {
                         List<Artist> artists = firstDesigner.FavoriteArtists.Select(x => x.Artist).ToList();
                         firstDesigner.AllocatedArtists = RemoveFashionModels(artists, commonModelsIds);
-                        firstDesigner.Score = secondDesigner.Score + commonModelsIds.Count;
                     }
                     else if (firstDesignerModelPosition == secondDesignerModelPosition)
                     {
-                        if (firstDesigner.Score < secondDesigner.Score)
+                        if (getScore(firstDesigner) < getScore(firstDesigner))
                         {
                             List<Artist> artistsFirstDesigner = new List<Artist>();
 
@@ -116,11 +124,10 @@ namespace ResourceAllocation.Services.ResourceAllocation
                             {
                                 artistsFirstDesigner.Add(artist.Artist);
                             }
-                            secondDesigner.AllocatedArtists =
+                            firstDesigner.AllocatedArtists =
                                 RemoveFashionModels(artistsFirstDesigner, commonModelsIds);
-                            firstDesigner.Score = secondDesigner.Score + commonModelsIds.Count;
                         }
-                        else if (firstDesigner.Score > secondDesigner.Score)
+                        else if (getScore(firstDesigner) > getScore(secondDesigner))
                         {
                             List<Artist> artistsSecondDesigner = new List<Artist>();
 
@@ -130,9 +137,8 @@ namespace ResourceAllocation.Services.ResourceAllocation
                                 artistsSecondDesigner.Add(artist.Artist);
                             }
 
-                            firstDesigner.FavoriteArtists =
+                            secondDesigner.FavoriteArtists =
                                 RemoveFashionModels(artistsSecondDesigner, commonModelsIds);
-                            firstDesigner.Score = secondDesigner.Score + commonModelsIds.Count;
                         }
                         else
                         {
@@ -154,11 +160,9 @@ namespace ResourceAllocation.Services.ResourceAllocation
 
                             firstDesigner.FavoriteArtists =
                                 RemoveFashionModels(artistsFirstDesigner, commonModelsIds);
-                            firstDesigner.Score = secondDesigner.Score + commonModelsIds.Count;
 
                             secondDesigner.FavoriteArtists =
                                 RemoveFashionModels(artistsSecondDesigner, commonModelsIds);
-                            secondDesigner.Score = secondDesigner.Score + commonModelsIds.Count;
                         }
                     }
                 }
