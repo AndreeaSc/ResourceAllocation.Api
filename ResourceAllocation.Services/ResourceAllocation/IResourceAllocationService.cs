@@ -5,6 +5,6 @@ namespace ResourceAllocation.Services.ResourceAllocation
 {
     public interface IResourceAllocationService
     {
-        List<Designer> ExecuteAlgorithm(List<Designer> designers, List<Artist> fashionModels);
+        List<Designer> AllocateArtistsAlgorithm(List<Designer> designers, List<Artist> artist);
     }
 }
