@@ -22,12 +22,9 @@ namespace ResourceAllocation.DataLayer
                 .HasOne(bc => bc.Designer)
                 .WithMany(c => c.FavoriteArtists)
                 .HasForeignKey(bc => bc.DesignerId);
-
         }   
 
         public DbSet<Artist> Artists { get; set; }
         public DbSet<Designer> Designers { get; set; }
-        public DbSet<Show> Shows { get; set; }
-         
     }
 }

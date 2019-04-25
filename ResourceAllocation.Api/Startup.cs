@@ -8,11 +8,9 @@ using Newtonsoft.Json;
 using ResourceAllocation.DataLayer;
 using ResourceAllocation.DataLayer.Designers;
 using ResourceAllocation.DataLayer.Artists;
-using ResourceAllocation.DataLayer.Shows;
 using ResourceAllocation.Services.Designers;
 using ResourceAllocation.Services.Artists;
 using ResourceAllocation.Services.ResourceAllocation;
-using ResourceAllocation.Services.Shows;
 
 namespace ResourceAllocation.Api
 {
@@ -42,9 +40,6 @@ namespace ResourceAllocation.Api
 
             services.AddTransient<IDesignersService, DesignersService>();
             services.AddTransient<IDesignersRepository, DesignersRepository>();
-
-            services.AddTransient<IShowsService, ShowsService>();
-            services.AddTransient<IShowsRepository, ShowsRepository>();
 
             services.AddTransient<IResourceAllocationService, ResourceAllocationService>();
 
