@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ResourceAllocation.Domain
@@ -16,5 +17,8 @@ namespace ResourceAllocation.Domain
 
         [NotMapped]
         public int Score { get; set; }
+
+        public DateTime DateTimeShow { get; set; }
+        public String LocationShow { get; set; }
     }
 }

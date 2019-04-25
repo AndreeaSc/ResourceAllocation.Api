@@ -98,77 +98,83 @@ namespace ResourceAllocation.Services.ResourceAllocation
                     var secondDesigner = designers.First(x => x.Id == commonModel.SecondDesigner);
                     var secondDesignerModelPosition = GetModelPosition(secondDesigner, commonModel);
 
-                    var commonModelsIds = firstDesigner.FavoriteArtists
-                        .Where(x => secondDesigner.FavoriteArtists.Any(y => y.ArtistId == x.ArtistId))
-                        .Select(x => x.ArtistId)
-                        .ToList();
+                    if (firstDesigner.DateTimeShow.Date.Equals(secondDesigner.DateTimeShow.Date))
+                    {
 
-                    if (firstDesignerModelPosition < secondDesignerModelPosition)
-                    {
-                        List<Artist> artists = secondDesigner.FavoriteArtists.Select(x => x.Artist).ToList();
-                        secondDesigner.AllocatedArtists = RemoveFashionModels(artists, commonModelsIds);
-                    }
-                    else if (firstDesignerModelPosition > secondDesignerModelPosition)
-                    {
-                        List<Artist> artists = firstDesigner.FavoriteArtists.Select(x => x.Artist).ToList();
-                        firstDesigner.AllocatedArtists = RemoveFashionModels(artists, commonModelsIds);
-                    }
-                    else if (firstDesignerModelPosition == secondDesignerModelPosition)
-                    {
-                        if (getScore(firstDesigner) < getScore(firstDesigner))
+
+                        var commonModelsIds = firstDesigner.FavoriteArtists
+                                .Where(x => secondDesigner.FavoriteArtists.Any(y => y.ArtistId == x.ArtistId))
+                                .Select(x => x.ArtistId)
+                                .ToList();
+
+                        if (firstDesignerModelPosition < secondDesignerModelPosition)
                         {
-                            List<Artist> artistsFirstDesigner = new List<Artist>();
-
-                            List<DesignerArtists> allocatedArtists = firstDesigner.AllocatedArtists;
-                            foreach (var artist in allocatedArtists)
-                            {
-                                artistsFirstDesigner.Add(artist.Artist);
-                            }
-                            firstDesigner.AllocatedArtists =
-                                RemoveFashionModels(artistsFirstDesigner, commonModelsIds);
+                            List<Artist> artists = secondDesigner.FavoriteArtists.Select(x => x.Artist).ToList();
+                            secondDesigner.AllocatedArtists = RemoveFashionModels(artists, commonModelsIds);
                         }
-                        else if (getScore(firstDesigner) > getScore(secondDesigner))
+                        else if (firstDesignerModelPosition > secondDesignerModelPosition)
                         {
-                            List<Artist> artistsSecondDesigner = new List<Artist>();
-
-                            List<DesignerArtists> allocatedArtists = secondDesigner.AllocatedArtists;
-                            foreach (var artist in allocatedArtists)
-                            {
-                                artistsSecondDesigner.Add(artist.Artist);
-                            }
-
-                            secondDesigner.FavoriteArtists =
-                                RemoveFashionModels(artistsSecondDesigner, commonModelsIds);
+                            List<Artist> artists = firstDesigner.FavoriteArtists.Select(x => x.Artist).ToList();
+                            firstDesigner.AllocatedArtists = RemoveFashionModels(artists, commonModelsIds);
                         }
-                        else
+                        else if (firstDesignerModelPosition == secondDesignerModelPosition)
                         {
-                            List<Artist> artistsFirstDesigner = new List<Artist>();
-
-                            List<DesignerArtists> allocatedArtistsFirstDesinger = firstDesigner.AllocatedArtists;
-                            foreach (var artist in allocatedArtistsFirstDesinger)
+                            if (getScore(firstDesigner) < getScore(firstDesigner))
                             {
-                                artistsFirstDesigner.Add(artist.Artist);
+                                List<Artist> artistsFirstDesigner = new List<Artist>();
+
+                                List<DesignerArtists> allocatedArtists = firstDesigner.AllocatedArtists;
+                                foreach (var artist in allocatedArtists)
+                                {
+                                    artistsFirstDesigner.Add(artist.Artist);
+                                }
+                                firstDesigner.AllocatedArtists =
+                                    RemoveFashionModels(artistsFirstDesigner, commonModelsIds);
                             }
-
-                            List<Artist> artistsSecondDesigner = new List<Artist>();
-
-                            List<DesignerArtists> allocatedArtistsSeconDesigner = secondDesigner.AllocatedArtists;
-                            foreach (var artist in allocatedArtistsSeconDesigner)
+                            else if (getScore(firstDesigner) > getScore(secondDesigner))
                             {
-                                artistsSecondDesigner.Add(artist.Artist);
+                                List<Artist> artistsSecondDesigner = new List<Artist>();
+
+                                List<DesignerArtists> allocatedArtists = secondDesigner.AllocatedArtists;
+                                foreach (var artist in allocatedArtists)
+                                {
+                                    artistsSecondDesigner.Add(artist.Artist);
+                                }
+
+                                secondDesigner.FavoriteArtists =
+                                    RemoveFashionModels(artistsSecondDesigner, commonModelsIds);
                             }
+                            else
+                            {
+                                List<Artist> artistsFirstDesigner = new List<Artist>();
 
-                            firstDesigner.FavoriteArtists =
-                                RemoveFashionModels(artistsFirstDesigner, commonModelsIds);
+                                List<DesignerArtists> allocatedArtistsFirstDesinger = firstDesigner.AllocatedArtists;
+                                foreach (var artist in allocatedArtistsFirstDesinger)
+                                {
+                                    artistsFirstDesigner.Add(artist.Artist);
+                                }
 
-                            secondDesigner.FavoriteArtists =
-                                RemoveFashionModels(artistsSecondDesigner, commonModelsIds);
+                                List<Artist> artistsSecondDesigner = new List<Artist>();
+
+                                List<DesignerArtists> allocatedArtistsSeconDesigner = secondDesigner.AllocatedArtists;
+                                foreach (var artist in allocatedArtistsSeconDesigner)
+                                {
+                                    artistsSecondDesigner.Add(artist.Artist);
+                                }
+
+                                firstDesigner.FavoriteArtists =
+                                    RemoveFashionModels(artistsFirstDesigner, commonModelsIds);
+
+                                secondDesigner.FavoriteArtists =
+                                    RemoveFashionModels(artistsSecondDesigner, commonModelsIds);
+                            }
                         }
                     }
                 }
-                return designers;
             }
+            return designers;
         }
     }
 }
+
 
