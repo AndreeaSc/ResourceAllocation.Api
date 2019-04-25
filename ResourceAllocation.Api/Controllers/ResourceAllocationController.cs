@@ -30,7 +30,7 @@ namespace ResourceAllocation.Api.Controllers
             var designers = _designerRepository.GetAll();
             var artists = _artistsRepository.GetAll();
 
-            var result = _resourceAllocationService.ExecuteAlgorithm(designers, artists);
+            var result = _resourceAllocationService.AllocateArtistsAlgorithm(designers, artists);
 
             return result;
         }
