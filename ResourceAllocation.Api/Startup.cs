@@ -41,7 +41,8 @@ namespace ResourceAllocation.Api
             services.AddTransient<IDesignersService, DesignersService>();
             services.AddTransient<IDesignersRepository, DesignersRepository>();
 
-            services.AddTransient<IResourceAllocationService, ResourceAllocationService>();
+            services.AddTransient<IAdjustedWinnerAllocationService, AdjustedWinnerAllocationService>();
+            services.AddTransient<IDescendingDemandAllocationService, DescendingDemandAllocationService>();
 
             var connection = @"Server=(localdb)\mssqllocaldb;Database=ModelLinK;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<ResourceAllocationDbContext>
