@@ -11,26 +11,29 @@ namespace ResourceAllocation.Api.Controllers
     [ApiController]
     public class ResourceAllocationController : ControllerBase
     {
-        private readonly IResourceAllocationService _resourceAllocationService;
+        private readonly IAdjustedWinnerAllocationService _adjustedWinnerAllocationService;
+        private readonly IDescendingDemandAllocationService _descendingDemandAllocationService;
 
-        private readonly IDesignersRepository _designerRepository;
-
-        private readonly IArtistsRepository _artistsRepository;
-
-        public ResourceAllocationController(IResourceAllocationService resourceAllocationService, IDesignersRepository designerRepository, IArtistsRepository artistsRepository)
+        public ResourceAllocationController(IAdjustedWinnerAllocationService adjustedWinnerAllocationService, IDescendingDemandAllocationService descendingDemandAllocationService)
         {
-            _resourceAllocationService = resourceAllocationService;
-            _designerRepository = designerRepository;
-            _artistsRepository = artistsRepository;
+            _adjustedWinnerAllocationService = adjustedWinnerAllocationService;
+            _descendingDemandAllocationService = descendingDemandAllocationService;
         }
 
         [HttpGet]
-        public List<Designer> Get()
+        [Route("descending-demand")]
+        public AlgorithmResult GetDescendingDemand()
         {
-            var designers = _designerRepository.GetAll();
-            var artists = _artistsRepository.GetAll();
+            var result = _descendingDemandAllocationService.Execute();
 
-            var result = _resourceAllocationService.AllocateArtistsAlgorithm(designers, artists);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("adjusted-winner")]
+        public AlgorithmResult GetAdjustedWinner()
+        {
+            var result = _adjustedWinnerAllocationService.Execute();
 
             return result;
         }
