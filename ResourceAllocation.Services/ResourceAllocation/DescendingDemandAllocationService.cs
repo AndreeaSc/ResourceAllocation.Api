@@ -13,7 +13,7 @@ namespace ResourceAllocation.Services.ResourceAllocation
         private readonly IDesignersRepository _designersRepository;
         private readonly IArtistsRepository _artistsRepository;
 
-        private int noArtistsWanted = 3;
+        private int noArtistsWanted = 4;
 
         public DescendingDemandAllocationService(IDesignersRepository designersRepository, IArtistsRepository artistsRepository)
         {
