@@ -13,6 +13,8 @@ namespace ResourceAllocation.Services.ResourceAllocation
         private readonly IDesignersRepository _designersRepository;
         private readonly IArtistsRepository _artistsRepository;
 
+        int noArtistsWanted = 4;
+
         public AdjustedWinnerAllocationService(IDesignersRepository designersRepository, IArtistsRepository artistsRepository)
         {
             _designersRepository = designersRepository;
@@ -38,6 +40,29 @@ namespace ResourceAllocation.Services.ResourceAllocation
                 Score = FinalScore(result),
                 TimeExecuted = stopWatch.Elapsed.TotalMilliseconds
             };
+        }
+
+        private void alllocateNoOfNeededArtists(Designer designer)
+        {
+            int counter = 0;
+            List<DesignerArtists> artistsWantedTemp = new List<DesignerArtists>();
+
+            foreach (var artist in designer.AllocatedArtists)
+            {
+                artistsWantedTemp.Add(artist);
+                counter++;
+                if (counter == noArtistsWanted)
+                {
+                    break;
+                }
+            }
+
+            designer.AllocatedArtists.Clear();
+
+            foreach (var artist in artistsWantedTemp)
+            {
+                designer.AllocatedArtists.Add(artist);
+            }
         }
 
         private List<Designer> AdjustedWinner(List<Designer> designers, List<CommonArtistEntity> commonArtists)
@@ -76,6 +101,12 @@ namespace ResourceAllocation.Services.ResourceAllocation
                             RemoveCommonArtistFromDesigner(secondDesigner, commonArtist);
                         }
                     }
+
+                    alllocateNoOfNeededArtists(firstDesigner);
+                }
+                else
+                {
+                    alllocateNoOfNeededArtists(firstDesigner);
                 }
             }
             return designers;
