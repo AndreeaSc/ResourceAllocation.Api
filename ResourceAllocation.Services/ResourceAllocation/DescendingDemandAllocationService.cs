@@ -2,6 +2,7 @@
 using ResourceAllocation.DataLayer.Designers;
 using ResourceAllocation.Domain;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ResourceAllocation.Services.ResourceAllocation
@@ -23,38 +24,18 @@ namespace ResourceAllocation.Services.ResourceAllocation
             SetInitialAllocatedArtists(designers);
             var artists = _artistsRepository.GetAll();
 
-            List<CommonArtistEntity> commonArtists = new List<CommonArtistEntity>();
+            var commonArtists = GetCommonModels(designers);
 
-
-            foreach (var firstDesigner in designers)
-            {
-                foreach (var secondDesigner in designers)
-                {
-                    if (firstDesigner.Id != secondDesigner.Id)
-                    {
-                        GetCommonModels(firstDesigner, secondDesigner, commonArtists);
-                    }
-                }
-            }
-
-            List<Designer> DDFinalScoreDesigners = new List<Designer>();
-
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            DDFinalScoreDesigners = DescendingDemand(designers, commonArtists);
-            watch.Stop();
-
-            int DescendingDemandScore = 0;
-
-            foreach (var designer in DDFinalScoreDesigners)
-            {
-                DescendingDemandScore += FinalScore(designer);
-            }
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var result = DescendingDemand(designers, commonArtists);
+            stopWatch.Stop();
 
             return new AlgorithmResult
             {
-                Designers = DDFinalScoreDesigners,
-                Score = DescendingDemandScore,
-                TimeExecuted = watch.ElapsedMilliseconds
+                Designers = result,
+                Score = FinalScore(result),
+                TimeExecuted = stopWatch.Elapsed.TotalMilliseconds
             };
         }
 
@@ -118,24 +99,18 @@ namespace ResourceAllocation.Services.ResourceAllocation
             return partition;
         }
 
-        public Designer RemoveArtistsPartition(Designer designer)
+        public void RemoveArtistsPartition(Designer designer)
         {
-            int partitionForFirtsDesigner = 0;
-
-            Designer designerCopy = new Designer();
-            designerCopy.AllocatedArtists = designer.AllocatedArtists;
-
-            foreach (var artistOfFirstDesigner in designerCopy.AllocatedArtists.ToList())
+            try
             {
-                designer.AllocatedArtists.Remove(artistOfFirstDesigner);
-
-                partitionForFirtsDesigner++;
-
-                if (partitionForFirtsDesigner == 3)
-                    break;
+                designer.AllocatedArtists.RemoveAt(0);
+                designer.AllocatedArtists.RemoveAt(0);
+                designer.AllocatedArtists.RemoveAt(0);
             }
-
-            return designer;
+            catch (System.Exception)
+            {
+                
+            }
         }
     }
 }

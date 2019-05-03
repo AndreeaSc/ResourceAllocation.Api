@@ -7,24 +7,34 @@ namespace ResourceAllocation.Services.ResourceAllocation
 {
     public class BaseAllocationAlgorithm
     {
-        public static List<Guid> GetCommonModels(Designer designer, Designer otherDesigner, List<CommonArtistEntity> commonArtists)
+        public static List<CommonArtistEntity> GetCommonModels(List<Designer> designers)
         {
-            var commonModelsIds = designer.FavoriteArtists
-                .Where(x => otherDesigner.FavoriteArtists.Any(y => y.ArtistId == x.ArtistId))
-                .Select(x => x.ArtistId)
-                .ToList();
-
-            foreach (var commonModelsId in commonModelsIds)
+            var commonArtists = new List<CommonArtistEntity>();
+            foreach (var firstDesigner in designers)
             {
-                commonArtists.Add(new CommonArtistEntity()
+                foreach (var secondDesigner in designers)
                 {
-                    FirstDesigner = designer.Id,
-                    SecondDesigner = otherDesigner.Id,
-                    ArtistId = commonModelsId
-                });
+                    if (firstDesigner.Id != secondDesigner.Id)
+                    {
+                        var commonModelsIds = firstDesigner.FavoriteArtists
+                            .Where(x => secondDesigner.FavoriteArtists.Any(y => y.ArtistId == x.ArtistId))
+                            .Select(x => x.ArtistId)
+                            .ToList();
+
+                        foreach (var commonModelsId in commonModelsIds)
+                        {
+                            commonArtists.Add(new CommonArtistEntity()
+                            {
+                                FirstDesigner = firstDesigner.Id,
+                                SecondDesigner = secondDesigner.Id,
+                                ArtistId = commonModelsId
+                            });
+                        }
+                    }
+                }
             }
 
-            return commonModelsIds;
+            return commonArtists;
         }
 
         public void SetInitialAllocatedArtists(List<Designer> designers)
@@ -39,9 +49,14 @@ namespace ResourceAllocation.Services.ResourceAllocation
             }
         }
 
-        public int FinalScore(Designer designer)
+        public int FinalScore(List<Designer> designers)
         {
-            int result = designer.FavoriteArtists.Count - designer.AllocatedArtists.Count;
+            int result = 0;
+
+            foreach (var designer in designers)
+            {
+                result += designer.AllocatedArtists.Sum(x => x.Order);
+            }
 
             return result;
         }

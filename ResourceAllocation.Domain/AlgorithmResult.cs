@@ -6,6 +6,6 @@ namespace ResourceAllocation.Domain
     {
         public List<Designer> Designers { get; set; }
         public int Score { get; set; }
-        public long TimeExecuted { get; set; }
+        public double TimeExecuted { get; set; }
     }
 }

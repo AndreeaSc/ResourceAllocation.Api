@@ -3,6 +3,7 @@ using ResourceAllocation.DataLayer.Designers;
 using ResourceAllocation.Domain;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ResourceAllocation.Services.ResourceAllocation
@@ -24,39 +25,19 @@ namespace ResourceAllocation.Services.ResourceAllocation
             SetInitialAllocatedArtists(designers);
             var artists = _artistsRepository.GetAll();
 
-            List<CommonArtistEntity> commonArtists = new List<CommonArtistEntity>();
+            var commonArtists = GetCommonModels(designers);
 
-            foreach (var firstDesigner in designers)
-            {
-                foreach (var secondDesigner in designers)
-                {
-                    if (firstDesigner.Id != secondDesigner.Id)
-                    {
-                        GetCommonModels(firstDesigner, secondDesigner, commonArtists);
-                    }
-                }
-            }
-
-            List<Designer> AWFinalScoreDesigners = new List<Designer>();
-
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            AWFinalScoreDesigners = AdjustedWinner(designers, commonArtists);
-            watch.Stop();
-
-            int AdjustedWinnerScore = 0;
-
-            foreach (var designer in AWFinalScoreDesigners)
-            {
-                AdjustedWinnerScore += FinalScore(designer);
-            }
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            var result = AdjustedWinner(designers, commonArtists);
+            stopWatch.Stop();
 
             return new AlgorithmResult
             {
-                Designers = AWFinalScoreDesigners,
-                Score = AdjustedWinnerScore,
-                TimeExecuted = watch.ElapsedMilliseconds
-        };
-
+                Designers = result,
+                Score = FinalScore(result),
+                TimeExecuted = stopWatch.Elapsed.TotalMilliseconds
+            };
         }
 
         private List<Designer> AdjustedWinner(List<Designer> designers, List<CommonArtistEntity> commonArtists)
@@ -73,78 +54,38 @@ namespace ResourceAllocation.Services.ResourceAllocation
                 {
                     if (firstDesignerArtistPosition < secondDesignerArtistPosition)
                     {
-                        foreach (var artist in secondDesigner.AllocatedArtists)
-                        {
-                            if (artist.ArtistId == commonArtist.ArtistId)
-                            {
-                                secondDesigner.AllocatedArtists.Remove(artist);
-                            }
-                        }
+                        RemoveCommonArtistFromDesigner(secondDesigner, commonArtist);
                     }
                     else if (firstDesignerArtistPosition > secondDesignerArtistPosition)
                     {
-                        foreach (var artist in firstDesigner.AllocatedArtists)
-                        {
-                            if (artist.ArtistId == commonArtist.ArtistId)
-                            {
-                                firstDesigner.AllocatedArtists.Remove(artist);
-                            }
-                        }
+                        RemoveCommonArtistFromDesigner(firstDesigner, commonArtist);
                     }
                     else if (firstDesignerArtistPosition == secondDesignerArtistPosition)
                     {
-                        if (getScore(firstDesigner) < getScore(firstDesigner))
+                        if (GetDesignerScore(firstDesigner) < GetDesignerScore(firstDesigner))
                         {
-                            List<Artist> artistsFirstDesigner = new List<Artist>();
-
-                            foreach (var artist in firstDesigner.AllocatedArtists)
-                            {
-                                if (artist.ArtistId == commonArtist.ArtistId)
-                                {
-                                    firstDesigner.AllocatedArtists.Remove(artist);
-                                }
-                            }
+                            RemoveCommonArtistFromDesigner(firstDesigner, commonArtist);
                         }
-                        else if (getScore(firstDesigner) > getScore(secondDesigner))
+                        else if (GetDesignerScore(firstDesigner) > GetDesignerScore(secondDesigner))
                         {
-                            List<Artist> artistsSecondDesigner = new List<Artist>();
-
-                            List<DesignerArtists> allocatedArtists = secondDesigner.AllocatedArtists;
-                            foreach (var artist in allocatedArtists)
-                            {
-                                artistsSecondDesigner.Add(artist.Artist);
-                            }
-
-                            foreach (var artist in secondDesigner.AllocatedArtists)
-                            {
-                                if (artist.ArtistId == commonArtist.ArtistId)
-                                {
-                                    secondDesigner.AllocatedArtists.Remove(artist);
-                                }
-                            }
+                            RemoveCommonArtistFromDesigner(secondDesigner, commonArtist);
                         }
                         else
                         {
-                            foreach (var artist in firstDesigner.AllocatedArtists.ToList())
-                            {
-                                if (artist.ArtistId == commonArtist.ArtistId)
-                                {
-                                    firstDesigner.AllocatedArtists.Remove(artist);
-                                }
-                            }
-
-                            foreach (var artist in secondDesigner.AllocatedArtists.ToList())
-                            {
-                                if (artist.ArtistId == commonArtist.ArtistId)
-                                {
-                                    secondDesigner.AllocatedArtists.Remove(artist);
-                                }
-                            }
+                            RemoveCommonArtistFromDesigner(firstDesigner, commonArtist);
+                            RemoveCommonArtistFromDesigner(secondDesigner, commonArtist);
                         }
                     }
                 }
             }
             return designers;
+        }
+
+        private void RemoveCommonArtistFromDesigner(Designer designer, CommonArtistEntity commonArtist)
+        {
+            designer.AllocatedArtists = designer.AllocatedArtists
+                .Where(x => x.ArtistId != commonArtist.ArtistId)
+                .ToList();
         }
 
         private static int GetModelPosition(Designer firstDesigner, CommonArtistEntity model)
@@ -158,14 +99,9 @@ namespace ResourceAllocation.Services.ResourceAllocation
             return -1;
         }
 
-        private static int getScore(Designer designer)
+        private int GetDesignerScore(Designer designer)
         {
-            if (designer.FavoriteArtists != designer.AllocatedArtists)
-            {
-                designer.Score = designer.Score + designer.FavoriteArtists.Count - designer.AllocatedArtists.Count;
-            }
-
-            return designer.Score;
+            return designer.AllocatedArtists.Sum(x => x.Order);
         }
     }
 }
