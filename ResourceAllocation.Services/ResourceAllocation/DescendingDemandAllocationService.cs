@@ -3,6 +3,7 @@ using ResourceAllocation.DataLayer.Designers;
 using ResourceAllocation.Domain;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Tracing;
 using System.Linq;
 
 namespace ResourceAllocation.Services.ResourceAllocation
@@ -11,6 +12,8 @@ namespace ResourceAllocation.Services.ResourceAllocation
     {
         private readonly IDesignersRepository _designersRepository;
         private readonly IArtistsRepository _artistsRepository;
+
+        private int noArtistsWanted = 3;
 
         public DescendingDemandAllocationService(IDesignersRepository designersRepository, IArtistsRepository artistsRepository)
         {
@@ -39,6 +42,29 @@ namespace ResourceAllocation.Services.ResourceAllocation
             };
         }
 
+        private void alllocateNoOfNeededArtists(Designer designer)
+        {
+            int counter = 0;
+            List<DesignerArtists> artistsWantedTemp = new List<DesignerArtists>();
+
+            foreach (var artist in designer.AllocatedArtists)
+            {
+                artistsWantedTemp.Add(artist);
+                counter++;
+                if (counter == noArtistsWanted)
+                {
+                    break;
+                }
+            }
+
+            designer.AllocatedArtists.Clear();
+
+            foreach (var artist in artistsWantedTemp)
+            {
+                designer.AllocatedArtists.Add(artist);
+            }
+        }
+
         public List<Designer> DescendingDemand(List<Designer> designers, List<CommonArtistEntity> commonArtists)
         {
             foreach (var commonArtist in commonArtists)
@@ -48,11 +74,17 @@ namespace ResourceAllocation.Services.ResourceAllocation
 
                 if (firstDesigner.DateTimeShow.Date.Equals(secondDesigner.DateTimeShow.Date))
                 {
-                    while (PartitionTesting(firstDesigner, secondDesigner) != 3)
+                    while (PartitionTesting(firstDesigner, secondDesigner) != noArtistsWanted)
                     {
                         RemoveArtistsPartition(firstDesigner);
                         RemoveArtistsPartition(secondDesigner);
                     }
+
+                    alllocateNoOfNeededArtists(firstDesigner);
+                }
+                else
+                {
+                    alllocateNoOfNeededArtists(firstDesigner);
                 }
             }
 
@@ -79,13 +111,13 @@ namespace ResourceAllocation.Services.ResourceAllocation
                         partition++;
                     }
 
-                    if (partition == 3)
+                    if (partition == noArtistsWanted)
                     {
                         break;
                     }
                 }
 
-                if (partition == 3)
+                if (partition == noArtistsWanted)
                 {
                     break;
                 }
@@ -93,7 +125,7 @@ namespace ResourceAllocation.Services.ResourceAllocation
 
             if (firstDesigner.AllocatedArtists == null || secondDesigner.AllocatedArtists == null)
             {
-                partition = 3;
+                partition = noArtistsWanted;
             }
 
             return partition;
@@ -103,13 +135,14 @@ namespace ResourceAllocation.Services.ResourceAllocation
         {
             try
             {
-                designer.AllocatedArtists.RemoveAt(0);
-                designer.AllocatedArtists.RemoveAt(0);
-                designer.AllocatedArtists.RemoveAt(0);
+                for (int i = 0; i < noArtistsWanted; i++)
+                {
+                    designer.AllocatedArtists.RemoveAt(0);
+                }
             }
             catch (System.Exception)
             {
-                
+
             }
         }
     }

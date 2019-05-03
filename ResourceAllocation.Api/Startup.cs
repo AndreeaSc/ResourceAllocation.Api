@@ -11,13 +11,22 @@ using ResourceAllocation.DataLayer.Artists;
 using ResourceAllocation.Services.Designers;
 using ResourceAllocation.Services.Artists;
 using ResourceAllocation.Services.ResourceAllocation;
+using ResourceAllocation.Api.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace ResourceAllocation.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables();
+            configuration = builder.Build();
+
             Configuration = configuration;
         }
 
@@ -44,22 +53,31 @@ namespace ResourceAllocation.Api
             services.AddTransient<IAdjustedWinnerAllocationService, AdjustedWinnerAllocationService>();
             services.AddTransient<IDescendingDemandAllocationService, DescendingDemandAllocationService>();
 
-            var connection = @"Server=(localdb)\mssqllocaldb;Database=ModelLinK;Trusted_Connection=True;ConnectRetryCount=0";
+            var connectionStrings = new ConnectionStrings();
+            Configuration.GetSection("ConnectionStrings").Bind(connectionStrings);
+
             services.AddDbContext<ResourceAllocationDbContext>
-                (options => options.UseSqlServer(connection));
+                (options => options.UseSqlServer(connectionStrings.ResourceAllocationApiContext));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+            //    app.UseHsts();
+            //}
+
+            app.UseDeveloperExceptionPage();
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
@@ -72,6 +90,16 @@ namespace ResourceAllocation.Api
             app.UseMvc();
 
             app.UseCors("LocalCorsConfig");
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
         }
     }
 }
