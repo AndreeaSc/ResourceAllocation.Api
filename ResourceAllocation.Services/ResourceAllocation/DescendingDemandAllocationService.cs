@@ -133,17 +133,14 @@ namespace ResourceAllocation.Services.ResourceAllocation
 
         public void RemoveArtistsPartition(Designer designer)
         {
-            try
+            for (int i = 0; i < noArtistsWanted; i++)
             {
-                for (int i = 0; i < noArtistsWanted; i++)
+                if (designer.AllocatedArtists.Count != 0)
                 {
                     designer.AllocatedArtists.RemoveAt(0);
                 }
             }
-            catch (System.Exception)
-            {
 
-            }
         }
     }
 }

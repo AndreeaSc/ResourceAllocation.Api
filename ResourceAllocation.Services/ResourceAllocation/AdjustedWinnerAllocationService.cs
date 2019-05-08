@@ -109,6 +109,12 @@ namespace ResourceAllocation.Services.ResourceAllocation
                     alllocateNoOfNeededArtists(firstDesigner);
                 }
             }
+
+            foreach (var designer in designers)
+            {
+                alllocateNoOfNeededArtists(designer);
+            }
+
             return designers;
         }
 
