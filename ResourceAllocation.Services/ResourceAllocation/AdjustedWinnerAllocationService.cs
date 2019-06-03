@@ -13,7 +13,7 @@ namespace ResourceAllocation.Services.ResourceAllocation
         private readonly IDesignersRepository _designersRepository;
         private readonly IArtistsRepository _artistsRepository;
 
-        int noArtistsWanted = 4;
+       // int noArtistsWanted = 4;
 
         public AdjustedWinnerAllocationService(IDesignersRepository designersRepository, IArtistsRepository artistsRepository)
         {
@@ -51,7 +51,7 @@ namespace ResourceAllocation.Services.ResourceAllocation
             {
                 artistsWantedTemp.Add(artist);
                 counter++;
-                if (counter == noArtistsWanted)
+                if (counter == designer.nrOfArtistsNeeded)
                 {
                     break;
                 }
