@@ -13,7 +13,7 @@ namespace ResourceAllocation.Services.ResourceAllocation
         private readonly IDesignersRepository _designersRepository;
         private readonly IArtistsRepository _artistsRepository;
 
-       // int noArtistsWanted = 4;
+        int noArtistsWanted = 4;
 
         public AdjustedWinnerAllocationService(IDesignersRepository designersRepository, IArtistsRepository artistsRepository)
         {
@@ -102,11 +102,14 @@ namespace ResourceAllocation.Services.ResourceAllocation
                         }
                     }
 
-                    alllocateNoOfNeededArtists(firstDesigner);
-                }
-                else
-                {
-                    alllocateNoOfNeededArtists(firstDesigner);
+                    //    alllocateNoOfNeededArtists(firstDesigner);
+                    //    alllocateNoOfNeededArtists(secondDesigner);
+                    //}
+                    //else
+                    //{
+                    //    alllocateNoOfNeededArtists(firstDesigner);
+                    //    alllocateNoOfNeededArtists(secondDesigner);
+                    //}
                 }
             }
 
