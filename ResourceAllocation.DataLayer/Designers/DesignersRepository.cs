@@ -69,8 +69,8 @@ namespace ResourceAllocation.DataLayer.Designers
             dbEntity.Name = entity.Name;
             dbEntity.Mail = entity.Mail;
             dbEntity.Surname = entity.Surname;
-            dbEntity.Password = entity.Password;
-            dbEntity.FavoriteArtists = entity.FavoriteArtists;
+            dbEntity.nrOfArtistsNeeded = entity.nrOfArtistsNeeded;
+          //  dbEntity.FavoriteArtists = entity.FavoriteArtists;
             dbEntity.DateTimeShow = entity.DateTimeShow;
             dbEntity.LocationShow = entity.LocationShow;
             _context.Designers.Update(dbEntity);
