@@ -13,8 +13,6 @@ namespace ResourceAllocation.Services.ResourceAllocation
         private readonly IDesignersRepository _designersRepository;
         private readonly IArtistsRepository _artistsRepository;
 
-        private int noArtistsWanted = 2;
-
         public DescendingDemandAllocationService(IDesignersRepository designersRepository, IArtistsRepository artistsRepository)
         {
             _designersRepository = designersRepository;
@@ -74,10 +72,11 @@ namespace ResourceAllocation.Services.ResourceAllocation
                 var firstDesigner = designers.First(x => x.Id == commonArtist.FirstDesigner);
                 var secondDesigner = designers.First(x => x.Id == commonArtist.SecondDesigner);
 
-                    
+                int smallestPartition = SmallestNoOfArtistsNeeded(firstDesigner, secondDesigner);
+
                 if (firstDesigner.DateTimeShow.Date.Equals(secondDesigner.DateTimeShow.Date))
                 {
-                    while (PartitionTesting(firstDesigner, secondDesigner) != noArtistsWanted && firstDesigner.AllocatedArtists.Count !=0 && secondDesigner.AllocatedArtists.Count != 0)
+                    while (PartitionTesting(firstDesigner, secondDesigner) != smallestPartition && firstDesigner.AllocatedArtists.Count !=0 && secondDesigner.AllocatedArtists.Count != 0)
                     {
                         RemoveArtistsPartition(firstDesigner);
                         RemoveArtistsPartition(secondDesigner);
@@ -97,9 +96,8 @@ namespace ResourceAllocation.Services.ResourceAllocation
             return designers;
         }
 
-        public int PartitionTesting(Designer firstDesigner, Designer secondDesigner)
+        public int SmallestNoOfArtistsNeeded(Designer firstDesigner, Designer secondDesigner)
         {
-            int partitionCount = 0;
             int smallestPartition;
 
             if (firstDesigner.nrOfArtistsNeeded <= secondDesigner.nrOfArtistsNeeded)
@@ -110,6 +108,14 @@ namespace ResourceAllocation.Services.ResourceAllocation
             {
                 smallestPartition = secondDesigner.nrOfArtistsNeeded;
             }
+
+            return smallestPartition;
+        }
+
+        public int PartitionTesting(Designer firstDesigner, Designer secondDesigner)
+        {
+            int partitionCount = 0;
+            int smallestPartition = SmallestNoOfArtistsNeeded(firstDesigner, secondDesigner);
 
             foreach (var artist in firstDesigner.AllocatedArtists)
             {
