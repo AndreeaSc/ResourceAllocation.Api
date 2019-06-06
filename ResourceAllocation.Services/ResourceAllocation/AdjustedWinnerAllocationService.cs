@@ -101,15 +101,6 @@ namespace ResourceAllocation.Services.ResourceAllocation
                             RemoveCommonArtistFromDesigner(secondDesigner, commonArtist);
                         }
                     }
-
-                    //    alllocateNoOfNeededArtists(firstDesigner);
-                    //    alllocateNoOfNeededArtists(secondDesigner);
-                    //}
-                    //else
-                    //{
-                    //    alllocateNoOfNeededArtists(firstDesigner);
-                    //    alllocateNoOfNeededArtists(secondDesigner);
-                    //}
                 }
             }
 

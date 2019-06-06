@@ -51,7 +51,7 @@ namespace ResourceAllocation.Services.ResourceAllocation
             {
                 artistsWantedTemp.Add(artist);
                 counter++;
-                if (counter == noArtistsWanted)
+                if (counter == designer.nrOfArtistsNeeded)
                 {
                     break;
                 }
@@ -99,42 +99,34 @@ namespace ResourceAllocation.Services.ResourceAllocation
 
         public int PartitionTesting(Designer firstDesigner, Designer secondDesigner)
         {
-            int partition = 0;
-            bool stop = false;
+            int partitionCount = 0;
+            int smallestPartition;
 
-            foreach (var artistOfFirstDesigner in firstDesigner.AllocatedArtists)
+            if (firstDesigner.nrOfArtistsNeeded <= secondDesigner.nrOfArtistsNeeded)
             {
-                foreach (var artistOfSecondDesigner in secondDesigner.AllocatedArtists)
+                smallestPartition = firstDesigner.nrOfArtistsNeeded;
+            }
+            else
+            {
+                smallestPartition = secondDesigner.nrOfArtistsNeeded;
+            }
+
+            foreach (var artist in firstDesigner.AllocatedArtists)
+            {
+                foreach (var otherArtist in secondDesigner.AllocatedArtists)
                 {
-                    if (artistOfSecondDesigner.ArtistId == artistOfFirstDesigner.ArtistId)
+                    if (artist.ArtistId != otherArtist.ArtistId && partitionCount != smallestPartition)
                     {
-                        stop = true;
-                        break;
+                        partitionCount++;
                     }
-
-                    if (stop == false)
+                    else
                     {
-                        partition++;
+                        return partitionCount;
                     }
-
-                    if (partition == noArtistsWanted)
-                    {
-                        break;
-                    }
-                }
-
-                if (partition == noArtistsWanted)
-                {
-                    break;
                 }
             }
 
-            if (firstDesigner.AllocatedArtists == null || secondDesigner.AllocatedArtists == null)
-            {
-                partition = noArtistsWanted;
-            }
-
-            return partition;
+            return partitionCount;
         }
 
         public void RemoveArtistsPartition(Designer designer)
